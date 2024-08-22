@@ -23,17 +23,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final MessageSource messageSource;
 
-//    @ExceptionHandler(Exception.class)
-//    public ProblemDetail handleUncaughtException(Exception ex, WebRequest webRequest) {
-//        if (ex instanceof AccessDeniedException authError) throw authError;
-//        var status = HttpStatus.INTERNAL_SERVER_ERROR;
-//        var detail = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se "
-//                + "o problema persistir, entre em contato com o administrador do sistema.";
-//        var problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
-//        problemDetail.setTitle("Erro de Sistema");
-//        problemDetail.setType(URI.create("https://localhost:8080/errors/erro-de-sistema"));
-//        return problemDetail;
-//    }
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleUncaughtException(Exception ex, WebRequest webRequest) {
+        if (ex instanceof AccessDeniedException authError) throw authError;
+        var status = HttpStatus.INTERNAL_SERVER_ERROR;
+        var detail = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se "
+                + "o problema persistir, entre em contato com o administrador do sistema.";
+        var problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
+        problemDetail.setTitle("Erro de Sistema");
+        problemDetail.setType(URI.create("https://localhost:8080/errors/erro-de-sistema"));
+        return problemDetail;
+    }
 
 
     @ExceptionHandler(BusinessException.class)
