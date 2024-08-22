@@ -67,9 +67,10 @@ public class SecurityConfig {
                     resourceServer.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
                 })
                 .authorizeHttpRequests(authz -> {
-                    authz.requestMatchers(HttpMethod.GET, "/**").permitAll();
-                    authz.requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll();
-                    authz.anyRequest().authenticated();
+//                    authz.requestMatchers(HttpMethod.GET, "/**").permitAll();
+//                    authz.requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/register").permitAll();
+//                    authz.anyRequest().authenticated();
+                    authz.anyRequest().permitAll();
                 })
                 .build();
     }
