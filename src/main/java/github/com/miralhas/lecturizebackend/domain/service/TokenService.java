@@ -23,7 +23,7 @@ public class TokenService {
         var scopes = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("e-commerce-uol")
+                .issuer("lecturize-it")
                 .subject(authentication.getName())
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(TOKEN_EXPIRATION_TIME))
