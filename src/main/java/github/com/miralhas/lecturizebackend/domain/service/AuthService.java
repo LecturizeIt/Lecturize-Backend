@@ -24,10 +24,10 @@ import java.util.Set;
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
+    private final RoleService roleService;
 
     public User findUserByEmailOrException(String email) {
         return userRepository.findUserByEmail(email)
@@ -49,7 +49,7 @@ public class AuthService {
     @Transactional
     public User create(User user) {
         checkIfUsernameOrEmailAreAvailiable(user);
-        var userRole = roleRepository.findRoleByName(Role.Value.USER);
+        var userRole = roleService.getUserRole();
         user.setRoles(Set.of(userRole));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
