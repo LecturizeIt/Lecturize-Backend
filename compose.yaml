@@ -21,8 +21,6 @@ services:
         context: .
         dockerfile: Dockerfile
     image: lecturizeit-api:latest
-#    ports:
-#      - "8080:8080"
     depends_on:
       mysqldb:
         condition: service_healthy
@@ -39,7 +37,7 @@ services:
       dockerfile: Dockerfile
     image: lecturizeit-proxy:latest
     ports:
-      - "8080:80"
+      - "80:80"
     networks:
       - lecturizeit-network
     depends_on:
