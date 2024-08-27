@@ -1,0 +1,50 @@
+services:
+  mysqldb:
+    image: mysql:8.0.33
+    ports:
+      - 3307:3306
+    environment:
+      - MYSQL_DATABASE=lecturizeit
+      - MYSQL_ROOT_PASSWORD=admin
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - lecturizeit-network
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      retries: 10
+      interval: 3s
+      timeout: 30s
+
+  lecturizeit-api:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    image: lecturizeit-api:latest
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/lecturizeit
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=admin
+    networks:
+      - lecturizeit-network
+
+  lecturizeit-proxy:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: lecturizeit-proxy:latest
+    ports:
+      - "80:80"
+    networks:
+      - lecturizeit-network
+    depends_on:
+      - lecturizeit-api
+
+volumes:
+  mysql-data:
+networks:
+  lecturizeit-network:
+    name: lecturizeit-network
