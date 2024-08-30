@@ -5,12 +5,15 @@ import github.com.miralhas.lecturizebackend.api.dto.input.LectureInput;
 import github.com.miralhas.lecturizebackend.api.dto_mapper.LectureMapper;
 import github.com.miralhas.lecturizebackend.api.dto_mapper.LectureUnmapper;
 import github.com.miralhas.lecturizebackend.domain.model.Lecture;
+import github.com.miralhas.lecturizebackend.domain.repository.LectureRepository;
 import github.com.miralhas.lecturizebackend.domain.service.LectureService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -20,6 +23,14 @@ public class LectureResource {
     private final LectureService lectureService;
     private final LectureMapper lectureMapper;
     private final LectureUnmapper lectureUnmapper;
+    private final LectureRepository lectureRepository;
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<LectureDTO> getAllLectures() {
+        List<Lecture> lectures = lectureRepository.findAll();
+        return lectureMapper.toCollectionModel(lectures);
+    }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
