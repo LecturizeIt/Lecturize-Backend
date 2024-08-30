@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.*;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -82,6 +83,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         problemDetail.setType(URI.create("http://localhost:8080/error/campos-invalidos"));
         problemDetail.setProperty("errors", errorsMap);
 
+        return super.handleExceptionInternal(ex, problemDetail, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(
+            HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        var detail = "O corpo da requisição está inválido. Verifique erros de sintaxe";
+        var problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
+        problemDetail.setTitle("Mensagem incompreensivel");
+        problemDetail.setType(URI.create("https://localhost:8080/errors/mensagem-incompreensivel"));
         return super.handleExceptionInternal(ex, problemDetail, headers, status, request);
     }
 }

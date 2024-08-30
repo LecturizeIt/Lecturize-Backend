@@ -11,7 +11,7 @@ import java.net.UnknownHostException;
 @RestController
 @RequestMapping("/ip")
 @RequiredArgsConstructor
-public class TestController {
+public class TestResource {
 
     @GetMapping
     public String lecturizeIt() throws UnknownHostException {
