@@ -1,6 +1,7 @@
 package github.com.miralhas.lecturizebackend.api.resource;
 
 import github.com.miralhas.lecturizebackend.api.dto.LectureDTO;
+import github.com.miralhas.lecturizebackend.api.dto.LectureSummaryDTO;
 import github.com.miralhas.lecturizebackend.api.dto.input.LectureInput;
 import github.com.miralhas.lecturizebackend.api.dto_mapper.LectureMapper;
 import github.com.miralhas.lecturizebackend.api.dto_mapper.LectureUnmapper;
@@ -27,9 +28,9 @@ public class LectureResource {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<LectureDTO> getAllLectures() {
+    public List<LectureSummaryDTO> getAllLectures() {
         List<Lecture> lectures = lectureRepository.findAll();
-        return lectureMapper.toCollectionModel(lectures);
+        return lectureMapper.toSummaryCollectionModel(lectures);
     }
 
     @GetMapping("/{id}")
@@ -45,6 +46,19 @@ public class LectureResource {
         Lecture lecture = lectureUnmapper.toDomainObject(lectureInput);
         lecture = lectureService.create(lecture, authToken);
         return lectureMapper.toModel(lecture);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public LectureDTO updateLecture(@RequestBody @Valid LectureInput lectureInput, @PathVariable Long id) {
+        Lecture lecture = lectureService.update(lectureInput, id);
+        return lectureMapper.toModel(lecture);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteLecture(@PathVariable Long id) {
+        lectureService.delete(id);
     }
 
 }

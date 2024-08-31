@@ -1,6 +1,7 @@
 package github.com.miralhas.lecturizebackend.api.dto_mapper;
 
 import github.com.miralhas.lecturizebackend.api.dto.LectureDTO;
+import github.com.miralhas.lecturizebackend.api.dto.LectureSummaryDTO;
 import github.com.miralhas.lecturizebackend.domain.model.Lecture;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -20,5 +21,13 @@ public class LectureMapper {
 
     public List<LectureDTO> toCollectionModel(List<Lecture> lectures) {
         return lectures.stream().map(this::toModel).toList();
+    }
+
+    public LectureSummaryDTO toSummaryModel(Lecture lecture) {
+        return modelMapper.map(lecture, LectureSummaryDTO.class);
+    }
+
+    public List<LectureSummaryDTO> toSummaryCollectionModel(List<Lecture> lectures) {
+        return lectures.stream().map(this::toSummaryModel).toList();
     }
 }

@@ -15,4 +15,8 @@ public class LectureUnmapper {
     public Lecture toDomainObject(LectureInput lectureInput) {
         return modelMapper.map(lectureInput, Lecture.class);
     }
+
+    public void copyToDomainObject(LectureInput lectureInput, Lecture lecture) {
+        modelMapper.map(lectureInput, lecture);
+    }
 }

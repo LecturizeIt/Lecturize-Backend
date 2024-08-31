@@ -43,8 +43,10 @@ public class Lecture {
     private OffsetDateTime endsAt;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Type type;
 
+    @Enumerated(EnumType.STRING)
     private Status status = Status.SCHEDULED;
 
     private String address;
