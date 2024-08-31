@@ -1,4 +1,4 @@
-package github.com.miralhas.lecturizebackend.domain.model;
+package github.com.miralhas.lecturizebackend.domain.model.auth;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -43,7 +43,6 @@ public class User {
     )
     @ToString.Exclude
     private Set<Role> roles;
-
 
     public List<? extends GrantedAuthority> getAuthorities() {
         return roles.stream().map(r -> r.getName().getAuthority()).toList();

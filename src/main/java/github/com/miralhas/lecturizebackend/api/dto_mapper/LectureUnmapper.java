@@ -1,7 +1,7 @@
 package github.com.miralhas.lecturizebackend.api.dto_mapper;
 
 import github.com.miralhas.lecturizebackend.api.dto.input.LectureInput;
-import github.com.miralhas.lecturizebackend.domain.model.Lecture;
+import github.com.miralhas.lecturizebackend.domain.model.lecture.Lecture;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package github.com.miralhas.lecturizebackend.domain.model;
+package github.com.miralhas.lecturizebackend.domain.model.auth;
 
 import jakarta.persistence.*;
 import lombok.Getter;

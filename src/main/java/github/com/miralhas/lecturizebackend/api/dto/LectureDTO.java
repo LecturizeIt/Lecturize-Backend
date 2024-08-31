@@ -1,7 +1,7 @@
 package github.com.miralhas.lecturizebackend.api.dto;
 
-import github.com.miralhas.lecturizebackend.domain.model.Lecture;
-import github.com.miralhas.lecturizebackend.domain.model.Type;
+import github.com.miralhas.lecturizebackend.domain.model.lecture.Status;
+import github.com.miralhas.lecturizebackend.domain.model.lecture.Type;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +17,7 @@ public class LectureDTO {
     private OffsetDateTime startsAt;
     private OffsetDateTime endsAt;
     private Type type;
-    private Lecture.Status status;
+    private Status status;
     private String url;
     private String address;
     private LectureOrganizerDTO organizer;

@@ -1,7 +1,7 @@
 package github.com.miralhas.lecturizebackend.api.dto.input;
 
 import github.com.miralhas.lecturizebackend.config.validation.EnumPattern;
-import github.com.miralhas.lecturizebackend.domain.model.Type;
+import github.com.miralhas.lecturizebackend.domain.model.lecture.Type;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,8 +26,8 @@ public class LectureInput {
     @FutureOrPresent
     private OffsetDateTime startsAt;
 
-    @Future
     @NotNull
+    @Future
     private OffsetDateTime endsAt;
 
     @NotBlank
