@@ -9,7 +9,9 @@ import org.hibernate.proxy.HibernateProxy;
 import org.springframework.util.StringUtils;
 
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -55,6 +57,14 @@ public class Lecture {
     @JoinColumn(nullable = false)
     private User organizer;
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "lecture_tags",
+            joinColumns = @JoinColumn(name = "lecture_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_tag_id")
+    )
+    private Set<CategoryTag> tags = new HashSet<>();
+
     private boolean isOnline() {
         return type.equals(Type.ONLINE);
     }
@@ -62,6 +72,7 @@ public class Lecture {
     private boolean isPresential() {
         return type.equals(Type.PRESENTIAL);
     }
+
 
     public void onlineValidations() {
         if (isPresential()) return;

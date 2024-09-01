@@ -1,7 +1,11 @@
 package github.com.miralhas.lecturizebackend.api.exception_handler;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonMappingException.Reference;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import github.com.miralhas.lecturizebackend.domain.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.*;
@@ -16,7 +20,11 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.URI;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
@@ -89,10 +97,34 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(
             HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+        if (ex.getCause() instanceof InvalidFormatException) {
+            return handleInvalidFormat((InvalidFormatException) ex.getCause(), headers, status, request);
+        }
+
         var detail = "O corpo da requisição está inválido. Verifique erros de sintaxe";
         var problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
         problemDetail.setTitle("Mensagem incompreensivel");
         problemDetail.setType(URI.create("https://localhost:8080/errors/mensagem-incompreensivel"));
         return super.handleExceptionInternal(ex, problemDetail, headers, status, request);
+    }
+
+    private ResponseEntity<Object> handleInvalidFormat(
+            InvalidFormatException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+        String path = joinPath(ex.getPath());
+        String detail = String.format("A propriedade '%s' recebeu o valor '%s' que é de um tipo inválido. " +
+                "Corrija e informe um valor compatível com o tipo '%s'", path, ex.getValue(), ex.getTargetType().getSimpleName());
+        var problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
+        problemDetail.setTitle("Mensagem incompreensivel");
+        problemDetail.setType(URI.create("https://localhost:8080/errors/mensagem-incompreensivel"));
+        return super.handleExceptionInternal(ex, problemDetail, headers, status, request);
+    }
+
+    private String joinPath(List<Reference> path) {
+        return path.stream()
+                .filter(f -> Objects.nonNull(f.getFieldName()))
+                .map(Reference::getFieldName)
+                .collect(Collectors.joining("."));
     }
 }

@@ -2,12 +2,14 @@ package github.com.miralhas.lecturizebackend.api.dto.input;
 
 import github.com.miralhas.lecturizebackend.config.validation.EnumPattern;
 import github.com.miralhas.lecturizebackend.domain.model.lecture.Type;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
 
 import java.time.OffsetDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -38,4 +40,7 @@ public class LectureInput {
     private String url;
 
     private String address;
+
+    @Valid
+    private Set<TagInput> tags;
 }

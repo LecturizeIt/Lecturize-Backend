@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,5 +21,6 @@ public class LectureDTO {
     private Status status;
     private String url;
     private String address;
+    private List<String> tags;
     private LectureOrganizerDTO organizer;
 }

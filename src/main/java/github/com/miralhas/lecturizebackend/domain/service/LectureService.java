@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +27,7 @@ public class LectureService {
     private final AuthService authService;
     private final LectureUnmapper lectureUnmapper;
     private final MessageSource messageSource;
+    private final CategoryTagService categoryTagService;
 
     public Lecture getLectureOrException(Long id) {
         return lectureRepository.findById(id)
@@ -36,10 +38,18 @@ public class LectureService {
     @Transactional
     public Lecture create(Lecture lecture, JwtAuthenticationToken authToken) {
         validateLecture(lecture);
+        validateTags(lecture);
         var user = authService.findUserByEmailOrException(authToken.getName());
         lecture.setOrganizer(user);
         lecture = lectureRepository.save(lecture);
         return lecture;
+    }
+
+    private void validateTags(Lecture lecture) {
+        var tags = lecture.getTags().stream()
+                .map(t -> categoryTagService.getTagOrException(t.getId()))
+                .collect(Collectors.toSet());
+        lecture.setTags(tags);
     }
 
 
@@ -50,6 +60,7 @@ public class LectureService {
         validateOrganizer(user, lecture);
         lectureUnmapper.copyToDomainObject(lectureInput, lecture);
         validateLecture(lecture);
+        validateTags(lecture);
         return lectureRepository.save(lecture);
     }
 
