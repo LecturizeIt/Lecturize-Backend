@@ -54,12 +54,6 @@ public class AuthService {
         return userRepository.save(user);
     }
 
-    public boolean isAdmin(User user) {
-        Role adminRole = roleService.getAdminRole();
-        return user.getRoles().contains(adminRole);
-    }
-
-
     private void checkIfUsernameOrEmailAreAvailiable(User user) {
         userRepository.findUserByEmail(user.getEmail())
                 .map(u -> {

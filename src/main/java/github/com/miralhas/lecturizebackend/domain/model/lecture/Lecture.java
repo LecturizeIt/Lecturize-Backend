@@ -65,23 +65,19 @@ public class Lecture {
     )
     private Set<CategoryTag> tags = new HashSet<>();
 
-    private boolean isOnline() {
-        return type.equals(Type.ONLINE);
+    public void validateType() {
+        switch (type) {
+            case Type.ONLINE -> onlineValidations();
+            case Type.PRESENTIAL -> presentialValidations();
+        }
     }
 
-    private boolean isPresential() {
-        return type.equals(Type.PRESENTIAL);
-    }
-
-
-    public void onlineValidations() {
-        if (isPresential()) return;
+    private void onlineValidations() {
         if (StringUtils.hasText(address)) throw new BusinessException("Palestra do tipo [ONLINE] não pode possuir endereço");
         if (!StringUtils.hasText(url)) throw new BusinessException("Palestra do tipo [ONLINE] necessita de um URL. Adicione o campo 'url' no corpo da requisição");
     }
 
-    public void presentialValidations() {
-        if (isOnline()) return;
+    private void presentialValidations() {
         if (StringUtils.hasText(url)) throw new BusinessException("Palestra do tipo [PRESENTIAL] não pode possuir URL");
         if (!StringUtils.hasText(address)) throw new BusinessException("Palestra do tipo [PRESENTIAL] necessita de um endereço. Adicione o campo 'address' no corpo da requisição");
     }

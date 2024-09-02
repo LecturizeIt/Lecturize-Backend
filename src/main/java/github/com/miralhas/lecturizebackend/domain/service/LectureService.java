@@ -45,13 +45,6 @@ public class LectureService {
         return lecture;
     }
 
-    private void validateTags(Lecture lecture) {
-        var tags = lecture.getTags().stream()
-                .map(t -> categoryTagService.getTagOrException(t.getId()))
-                .collect(Collectors.toSet());
-        lecture.setTags(tags);
-    }
-
 
     @Transactional
     public Lecture update(@Valid LectureInput lectureInput, Long id, JwtAuthenticationToken authToken) {
@@ -75,16 +68,21 @@ public class LectureService {
 
 
     private void validateOrganizer(User user, Lecture lecture) {
-        if (authService.isAdmin(user) || Objects.equals(user, lecture.getOrganizer())) return;
+        if (user.isAdmin() || Objects.equals(user, lecture.getOrganizer())) return;
         throw new AccessDeniedException(messageSource.getMessage(
                 "AbstractAccessDecisionManager.accessDenied", new Object[]{}, LocaleContextHolder.getLocale()
         ));
     }
 
+    private void validateTags(Lecture lecture) {
+        var tags = lecture.getTags().stream()
+                .map(t -> categoryTagService.getTagOrException(t.getId()))
+                .collect(Collectors.toSet());
+        lecture.setTags(tags);
+    }
 
     private void validateLecture(Lecture lecture) {
-        lecture.onlineValidations();
-        lecture.presentialValidations();
+        lecture.validateType();
         lecture.validateDateRange();
     }
 }

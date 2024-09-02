@@ -48,6 +48,10 @@ public class User {
         return roles.stream().map(r -> r.getName().getAuthority()).toList();
     }
 
+    public boolean isAdmin() {
+        return roles.stream().anyMatch(r -> r.getName().equals(Role.Value.ADMIN));
+    }
+
 
     @Override
     public final boolean equals(Object o) {
