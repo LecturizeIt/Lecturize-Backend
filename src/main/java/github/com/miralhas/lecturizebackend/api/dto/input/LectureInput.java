@@ -1,7 +1,7 @@
 package github.com.miralhas.lecturizebackend.api.dto.input;
 
 import github.com.miralhas.lecturizebackend.config.validation.EnumPattern;
-import github.com.miralhas.lecturizebackend.domain.model.lecture.Type;
+import github.com.miralhas.lecturizebackend.domain.model.lecture.enums.Type;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Getter;

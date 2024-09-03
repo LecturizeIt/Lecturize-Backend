@@ -1,12 +1,10 @@
 package github.com.miralhas.lecturizebackend.api.exception_handler;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import github.com.miralhas.lecturizebackend.domain.exception.BusinessException;
 import github.com.miralhas.lecturizebackend.domain.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -23,7 +21,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.net.URI;
-import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -35,17 +32,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final MessageSource messageSource;
 
-    @ExceptionHandler(Exception.class)
-    public ProblemDetail handleUncaughtException(Exception ex, WebRequest webRequest) {
-        if (ex instanceof AccessDeniedException authError) throw authError;
-        var status = HttpStatus.INTERNAL_SERVER_ERROR;
-        var detail = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se "
-                + "o problema persistir, entre em contato com o administrador do sistema.";
-        var problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
-        problemDetail.setTitle("Erro de Sistema");
-        problemDetail.setType(URI.create("https://localhost:8080/errors/erro-de-sistema"));
-        return problemDetail;
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ProblemDetail handleUncaughtException(Exception ex, WebRequest webRequest) {
+//        if (ex instanceof AccessDeniedException authError) throw authError;
+//        var status = HttpStatus.INTERNAL_SERVER_ERROR;
+//        var detail = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se "
+//                + "o problema persistir, entre em contato com o administrador do sistema.";
+//        var problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
+//        problemDetail.setTitle("Erro de Sistema");
+//        problemDetail.setType(URI.create("https://localhost:8080/errors/erro-de-sistema"));
+//        return problemDetail;
+//    }
 
 
     @ExceptionHandler(ResourceNotFoundException.class)

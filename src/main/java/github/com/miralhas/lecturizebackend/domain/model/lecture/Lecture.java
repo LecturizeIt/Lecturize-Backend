@@ -2,6 +2,8 @@ package github.com.miralhas.lecturizebackend.domain.model.lecture;
 
 import github.com.miralhas.lecturizebackend.domain.exception.BusinessException;
 import github.com.miralhas.lecturizebackend.domain.model.auth.User;
+import github.com.miralhas.lecturizebackend.domain.model.lecture.enums.Status;
+import github.com.miralhas.lecturizebackend.domain.model.lecture.enums.Type;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

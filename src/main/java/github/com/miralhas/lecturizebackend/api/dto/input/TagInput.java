@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 public class TagInput {
     @NotNull
-    private Long categoryTagId;
+    private Long id;
 }
