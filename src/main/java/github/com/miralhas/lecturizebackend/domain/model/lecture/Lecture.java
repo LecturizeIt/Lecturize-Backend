@@ -1,6 +1,9 @@
-package github.com.miralhas.lecturizebackend.domain.model;
+package github.com.miralhas.lecturizebackend.domain.model.lecture;
 
 import github.com.miralhas.lecturizebackend.domain.exception.BusinessException;
+import github.com.miralhas.lecturizebackend.domain.model.auth.User;
+import github.com.miralhas.lecturizebackend.domain.model.lecture.enums.Status;
+import github.com.miralhas.lecturizebackend.domain.model.lecture.enums.Type;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -8,7 +11,9 @@ import org.hibernate.proxy.HibernateProxy;
 import org.springframework.util.StringUtils;
 
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -16,9 +21,6 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 public class Lecture {
-
-    @ToString
-    public enum Status {IN_PROGRESS, COMPLETED, CANCELED, SCHEDULED}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,8 +45,10 @@ public class Lecture {
     private OffsetDateTime endsAt;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Type type;
 
+    @Enumerated(EnumType.STRING)
     private Status status = Status.SCHEDULED;
 
     private String address;
@@ -55,24 +59,37 @@ public class Lecture {
     @JoinColumn(nullable = false)
     private User organizer;
 
-    private boolean isOnline() {
-        return type.equals(Type.ONLINE);
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "lecture_tags",
+            joinColumns = @JoinColumn(name = "lecture_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_tag_id")
+    )
+    private Set<CategoryTag> tags = new HashSet<>();
+
+    public void validateType() {
+        switch (type) {
+            case Type.ONLINE -> onlineValidations();
+            case Type.PRESENTIAL -> presentialValidations();
+        }
     }
 
-    private boolean isPresential() {
-        return type.equals(Type.PRESENTIAL);
-    }
-
-    public void onlineValidations() {
-        if (isPresential()) return;
+    private void onlineValidations() {
         if (StringUtils.hasText(address)) throw new BusinessException("Palestra do tipo [ONLINE] não pode possuir endereço");
         if (!StringUtils.hasText(url)) throw new BusinessException("Palestra do tipo [ONLINE] necessita de um URL. Adicione o campo 'url' no corpo da requisição");
     }
 
-    public void presentialValidations() {
-        if (isOnline()) return;
+    private void presentialValidations() {
         if (StringUtils.hasText(url)) throw new BusinessException("Palestra do tipo [PRESENTIAL] não pode possuir URL");
         if (!StringUtils.hasText(address)) throw new BusinessException("Palestra do tipo [PRESENTIAL] necessita de um endereço. Adicione o campo 'address' no corpo da requisição");
+    }
+
+    public void validateDateRange() {
+        var isNotAfter = endsAt.isBefore(startsAt);
+        if (isNotAfter) throw new BusinessException(
+                "O horário do fim da palestra 'endsAt' não pode ser anterior ao horário de início 'startsAt'." +
+                        " Verifique os valores fornecidos e tente novamente."
+        );
     }
 
     @Override
@@ -90,5 +107,6 @@ public class Lecture {
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
+
 }
 

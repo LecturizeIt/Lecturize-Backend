@@ -2,7 +2,7 @@ services:
   mysqldb:
     image: mysql:8.0.33
     ports:
-      - 3307:3306
+      - "3307:3306"
     environment:
       - MYSQL_DATABASE=lecturizeit
       - MYSQL_ROOT_PASSWORD=admin
@@ -28,6 +28,9 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/lecturizeit
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=admin
+      - LOCAL_IMAGE_DIRECTORY=/app/images
+    volumes:
+      - api-images:/app/images
     networks:
       - lecturizeit-network
 
@@ -45,6 +48,7 @@ services:
 
 volumes:
   mysql-data:
+  api-images:
 networks:
   lecturizeit-network:
     name: lecturizeit-network

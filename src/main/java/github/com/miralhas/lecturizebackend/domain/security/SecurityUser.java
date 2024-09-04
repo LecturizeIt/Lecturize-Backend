@@ -1,6 +1,6 @@
 package github.com.miralhas.lecturizebackend.domain.security;
 
-import github.com.miralhas.lecturizebackend.domain.model.User;
+import github.com.miralhas.lecturizebackend.domain.model.auth.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
