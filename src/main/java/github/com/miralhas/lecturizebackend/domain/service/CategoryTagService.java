@@ -2,7 +2,7 @@ package github.com.miralhas.lecturizebackend.domain.service;
 
 import github.com.miralhas.lecturizebackend.domain.exception.CategoryTagNotFoundException;
 import github.com.miralhas.lecturizebackend.domain.model.lecture.CategoryTag;
-import github.com.miralhas.lecturizebackend.domain.model.lecture.CategoryTagRepository;
+import github.com.miralhas.lecturizebackend.domain.repository.CategoryTagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

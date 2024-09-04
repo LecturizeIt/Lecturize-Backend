@@ -12,3 +12,4 @@ INSERT INTO category_tag(name) VALUES ('Technology'), ('Science'), ('Mathematics
 insert into lecture(status, type, created_at, ends_at, organizer_id, starts_at, address, description, lecturer, title, url) values ('SCHEDULED', 'ONLINE', utc_timestamp, '2024-09-01 23:00:00', 1, '2024-09-01 03:00:00', null, 'Palestra de teste', 'Batman da Silva', 'Teste', 'https://teste.com');
 
 INSERT INTO lecture_tags(lecture_id, category_tag_id) VALUES (1, 1), (1, 2), (1, 3);
+

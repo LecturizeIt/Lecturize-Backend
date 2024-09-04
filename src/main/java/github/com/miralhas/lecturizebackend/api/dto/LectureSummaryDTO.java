@@ -1,6 +1,6 @@
 package github.com.miralhas.lecturizebackend.api.dto;
 
-import github.com.miralhas.lecturizebackend.domain.model.lecture.Type;
+import github.com.miralhas.lecturizebackend.domain.model.lecture.enums.Type;
 import lombok.Getter;
 import lombok.Setter;
 

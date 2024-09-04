@@ -1,12 +1,10 @@
 package github.com.miralhas.lecturizebackend.api.exception_handler;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import github.com.miralhas.lecturizebackend.domain.exception.BusinessException;
 import github.com.miralhas.lecturizebackend.domain.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -15,6 +13,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -23,7 +22,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.net.URI;
-import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -117,6 +115,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return super.handleExceptionInternal(ex, problemDetail, headers, status, request);
     }
 
+
+    @Override
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
+            HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        String detail = String.format("Método HTTP '%s' não é suportado por este endpoint. " +
+                "Por favor, use um dos seguintes métodos suportados: %s", ex.getMethod(), ex.getSupportedHttpMethods());
+        var problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.METHOD_NOT_ALLOWED, detail);
+        problemDetail.setTitle("Método HTTP não permitido");
+        problemDetail.setType(URI.create("https://localhost:8080/errors/metodo-nao-suportado"));
+        return super.handleExceptionInternal(ex, problemDetail, headers, status, request);
+    }
 
     @Override
     protected ResponseEntity<Object> handleTypeMismatch(
