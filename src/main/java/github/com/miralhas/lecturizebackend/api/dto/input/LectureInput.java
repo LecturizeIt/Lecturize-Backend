@@ -42,5 +42,5 @@ public class LectureInput {
     private String address;
 
     @Valid
-    private Set<TagInput> tags;
+    private Set<TagIdInput> tags;
 }
