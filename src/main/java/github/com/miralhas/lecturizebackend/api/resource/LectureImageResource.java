@@ -36,7 +36,7 @@ public class LectureImageResource {
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<InputStreamResource> getSolarPanelImage(
+	public ResponseEntity<InputStreamResource> getLectureImage(
 			@PathVariable Long id, @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
 		return lectureImageService.getImage(id, acceptHeader);
 	}

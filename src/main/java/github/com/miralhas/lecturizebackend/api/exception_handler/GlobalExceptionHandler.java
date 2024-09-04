@@ -13,6 +13,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -32,17 +33,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final MessageSource messageSource;
 
-//    @ExceptionHandler(Exception.class)
-//    public ProblemDetail handleUncaughtException(Exception ex, WebRequest webRequest) {
-//        if (ex instanceof AccessDeniedException authError) throw authError;
-//        var status = HttpStatus.INTERNAL_SERVER_ERROR;
-//        var detail = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se "
-//                + "o problema persistir, entre em contato com o administrador do sistema.";
-//        var problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
-//        problemDetail.setTitle("Erro de Sistema");
-//        problemDetail.setType(URI.create("https://localhost:8080/errors/erro-de-sistema"));
-//        return problemDetail;
-//    }
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleUncaughtException(Exception ex, WebRequest webRequest) {
+        if (ex instanceof AccessDeniedException authError) throw authError;
+        var status = HttpStatus.INTERNAL_SERVER_ERROR;
+        var detail = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se "
+                + "o problema persistir, entre em contato com o administrador do sistema.";
+        var problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
+        problemDetail.setTitle("Erro de Sistema");
+        problemDetail.setType(URI.create("https://localhost:8080/errors/erro-de-sistema"));
+        return problemDetail;
+    }
 
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -114,6 +115,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return super.handleExceptionInternal(ex, problemDetail, headers, status, request);
     }
 
+
+    @Override
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
+            HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        String detail = String.format("Método HTTP '%s' não é suportado por este endpoint. " +
+                "Por favor, use um dos seguintes métodos suportados: %s", ex.getMethod(), ex.getSupportedHttpMethods());
+        var problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.METHOD_NOT_ALLOWED, detail);
+        problemDetail.setTitle("Método HTTP não permitido");
+        problemDetail.setType(URI.create("https://localhost:8080/errors/metodo-nao-suportado"));
+        return super.handleExceptionInternal(ex, problemDetail, headers, status, request);
+    }
 
     @Override
     protected ResponseEntity<Object> handleTypeMismatch(

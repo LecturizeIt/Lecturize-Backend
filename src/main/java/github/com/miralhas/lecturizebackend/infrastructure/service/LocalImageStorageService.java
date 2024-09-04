@@ -2,6 +2,7 @@ package github.com.miralhas.lecturizebackend.infrastructure.service;
 
 import github.com.miralhas.lecturizebackend.domain.service.ImageStorageService;
 import github.com.miralhas.lecturizebackend.infrastructure.exception.StorageException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
@@ -12,6 +13,9 @@ import java.nio.file.Path;
 
 @Service
 public class LocalImageStorageService implements ImageStorageService {
+
+	@Value("${lecturizeit.storage.local.dir.images}")
+	private Path storagePath;
 
 	@Override
 	public InputStream retrieve(String fileName) {
@@ -44,7 +48,6 @@ public class LocalImageStorageService implements ImageStorageService {
 	}
 
 	private Path getFilePath(String fileName) {
-		Path imagesFoldePath = Path.of("src/main/resources/images").toAbsolutePath();
-		return imagesFoldePath.resolve(fileName);
+		return storagePath.resolve(fileName);
 	}
 }

@@ -13,4 +13,3 @@ insert into lecture(status, type, created_at, ends_at, organizer_id, starts_at, 
 
 INSERT INTO lecture_tags(lecture_id, category_tag_id) VALUES (1, 1), (1, 2), (1, 3);
 
-INSERT INTO lecture_image(lecture_id, `size`, content_type, description, file_name) VALUES(1, 46132, 'image/jpeg', 'goat', '135580d8-a3fc-40c8-8941-bb66acb34dde_neygoat.jpg');
