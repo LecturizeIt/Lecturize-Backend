@@ -2,8 +2,9 @@ package github.com.miralhas.lecturizebackend.domain.service;
 
 import github.com.miralhas.lecturizebackend.api.dto.input.LoginInput;
 import github.com.miralhas.lecturizebackend.domain.exception.UserAlreadyExistsException;
-import github.com.miralhas.lecturizebackend.domain.model.auth.Role;
-import github.com.miralhas.lecturizebackend.domain.model.auth.User;
+import github.com.miralhas.lecturizebackend.domain.model.Role;
+import github.com.miralhas.lecturizebackend.domain.model.User;
+import github.com.miralhas.lecturizebackend.domain.repository.RoleRepository;
 import github.com.miralhas.lecturizebackend.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -53,6 +54,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
+
 
     private void checkIfUsernameOrEmailAreAvailiable(User user) {
         userRepository.findUserByEmail(user.getEmail())

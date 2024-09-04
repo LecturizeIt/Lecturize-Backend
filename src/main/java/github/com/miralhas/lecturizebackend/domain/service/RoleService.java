@@ -1,7 +1,7 @@
 package github.com.miralhas.lecturizebackend.domain.service;
 
 import github.com.miralhas.lecturizebackend.domain.exception.BusinessException;
-import github.com.miralhas.lecturizebackend.domain.model.auth.Role;
+import github.com.miralhas.lecturizebackend.domain.model.Role;
 import github.com.miralhas.lecturizebackend.domain.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

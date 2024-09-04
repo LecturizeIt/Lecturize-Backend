@@ -1,4 +1,4 @@
-package github.com.miralhas.lecturizebackend.domain.model.auth;
+package github.com.miralhas.lecturizebackend.domain.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -44,12 +44,9 @@ public class User {
     @ToString.Exclude
     private Set<Role> roles;
 
+
     public List<? extends GrantedAuthority> getAuthorities() {
         return roles.stream().map(r -> r.getName().getAuthority()).toList();
-    }
-
-    public boolean isAdmin() {
-        return roles.stream().anyMatch(r -> r.getName().equals(Role.Value.ADMIN));
     }
 
 

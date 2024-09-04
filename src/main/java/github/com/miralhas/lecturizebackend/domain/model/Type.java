@@ -1,4 +1,4 @@
-package github.com.miralhas.lecturizebackend.domain.model.lecture.enums;
+package github.com.miralhas.lecturizebackend.domain.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

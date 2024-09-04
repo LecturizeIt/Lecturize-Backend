@@ -1,7 +1,7 @@
 package github.com.miralhas.lecturizebackend.api.dto_mapper;
 
 import github.com.miralhas.lecturizebackend.api.dto.input.CreateUserInput;
-import github.com.miralhas.lecturizebackend.domain.model.auth.User;
+import github.com.miralhas.lecturizebackend.domain.model.User;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

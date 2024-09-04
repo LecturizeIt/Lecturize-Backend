@@ -1,6 +1,6 @@
 package github.com.miralhas.lecturizebackend.domain.repository;
 
-import github.com.miralhas.lecturizebackend.domain.model.auth.Role;
+import github.com.miralhas.lecturizebackend.domain.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,7 +1,7 @@
 package github.com.miralhas.lecturizebackend.config.model_mapper;
 
 import github.com.miralhas.lecturizebackend.api.dto.UserDTO;
-import github.com.miralhas.lecturizebackend.domain.model.auth.User;
+import github.com.miralhas.lecturizebackend.domain.model.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

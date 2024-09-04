@@ -15,7 +15,7 @@ import java.time.Instant;
 @Transactional(readOnly = true)
 public class TokenService {
 
-    public static final int TOKEN_EXPIRATION_TIME = 86400;
+    public static final int TOKEN_EXPIRATION_TIME = 3600;
     private final JwtEncoder jwtEncoder;
 
     public Jwt generateToken(Authentication authentication) {

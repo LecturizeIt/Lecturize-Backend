@@ -31,6 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-### App ###
-src/main/java/github/com/miralhas/lecturizebackend/TestRun.java
