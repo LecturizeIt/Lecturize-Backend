@@ -41,6 +41,9 @@ public class LectureInput {
 
     private String address;
 
+    @Positive
+    private Integer maximumCapacity;
+
     @Valid
-    private Set<TagInput> tags;
+    private Set<TagIdInput> tags;
 }

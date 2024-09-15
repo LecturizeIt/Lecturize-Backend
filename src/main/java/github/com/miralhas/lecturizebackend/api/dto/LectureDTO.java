@@ -1,7 +1,5 @@
 package github.com.miralhas.lecturizebackend.api.dto;
 
-import github.com.miralhas.lecturizebackend.domain.model.lecture.enums.Status;
-import github.com.miralhas.lecturizebackend.domain.model.lecture.enums.Type;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,12 +13,14 @@ public class LectureDTO {
     private String title;
     private String lecturer;
     private String description;
+    private OffsetDateTime createdAt;
     private OffsetDateTime startsAt;
     private OffsetDateTime endsAt;
-    private Type type;
-    private Status status;
+    private String type;
+    private String status;
     private String url;
     private String address;
     private List<String> tags;
-    private LectureOrganizerDTO organizer;
+    private Integer maximumCapacity;
+    private UserSummaryDTO organizer;
 }

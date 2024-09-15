@@ -1,12 +1,20 @@
 package github.com.miralhas.lecturizebackend.api.dto.input;
 
-import jakarta.validation.constraints.NotNull;
+import github.com.miralhas.lecturizebackend.domain.model.lecture.CategoryTag;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class TagInput {
-    @NotNull
-    private Long id;
+
+	@NotBlank
+	private String name;
+
+	public CategoryTag formatTo() {
+		var tag = new CategoryTag();
+		tag.setName(name);
+		return tag;
+	}
 }

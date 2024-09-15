@@ -13,4 +13,6 @@ echo "Setting environment variables and starting Docker containers..."
 # export MYSQL_PASSWORD="admin"
 docker compose up --build
 
+docker compose down
+
 echo "Script completed."

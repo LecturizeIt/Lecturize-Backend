@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -27,6 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -35,13 +38,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleUncaughtException(Exception ex, WebRequest webRequest) {
-        if (ex instanceof AccessDeniedException authError) throw authError;
         var status = HttpStatus.INTERNAL_SERVER_ERROR;
         var detail = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se "
                 + "o problema persistir, entre em contato com o administrador do sistema.";
         var problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
         problemDetail.setTitle("Erro de Sistema");
         problemDetail.setType(URI.create("https://localhost:8080/errors/erro-de-sistema"));
+        return problemDetail;
+    }
+
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ProblemDetail handleAccessDeniedException(AccessDeniedException ex, WebRequest webRequest) {
+        var detail = ex.getMessage();
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, detail);
+        problemDetail.setTitle("Forbidden");
+        problemDetail.setType(URI.create("http://localhost:8080/forbidden-access"));
         return problemDetail;
     }
 

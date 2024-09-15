@@ -29,6 +29,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=admin
       - LOCAL_IMAGE_DIRECTORY=/app/images
+      - SPRING_PROFILES_ACTIVE=prod
     volumes:
       - api-images:/app/images
     networks:

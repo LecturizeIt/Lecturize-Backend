@@ -1,18 +1,22 @@
 package github.com.miralhas.lecturizebackend.api.dto;
 
-import github.com.miralhas.lecturizebackend.domain.model.lecture.enums.Type;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 public class LectureSummaryDTO {
-    public Long id;
-    public String title;
-    public String description;
-    public OffsetDateTime startsAt;
-    public OffsetDateTime endsAt;
-    public Type type;
+    private Long id;
+    private String title;
+    private String lecturer;
+    private String description;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime startsAt;
+    private OffsetDateTime endsAt;
+    private String type;
+    private String status;
+    private List<String> tags;
 }

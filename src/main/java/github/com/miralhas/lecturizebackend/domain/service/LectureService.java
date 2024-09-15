@@ -8,8 +8,6 @@ import github.com.miralhas.lecturizebackend.domain.model.lecture.Lecture;
 import github.com.miralhas.lecturizebackend.domain.repository.LectureRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -26,7 +24,6 @@ public class LectureService {
     private final LectureRepository lectureRepository;
     private final AuthService authService;
     private final LectureUnmapper lectureUnmapper;
-    private final MessageSource messageSource;
     private final CategoryTagService categoryTagService;
 
     public Lecture getLectureOrException(Long id) {
@@ -67,11 +64,28 @@ public class LectureService {
     }
 
 
-    private void validateOrganizer(User user, Lecture lecture) {
+    @Transactional
+    public void confirmParticipant(Long id, JwtAuthenticationToken authToken) {
+        var lecture = getLectureOrException(id);
+        var user = authService.findUserByEmailOrException(authToken.getName());
+        lecture.getParticipants().add(user);
+        lectureRepository.save(lecture);
+    }
+
+
+    @Transactional
+    public void unconfirmParticipant(Long id, JwtAuthenticationToken authToken) {
+        var lecture = getLectureOrException(id);
+        var user = authService.findUserByEmailOrException(authToken.getName());
+        lecture.getParticipants().remove(user);
+        lectureRepository.save(lecture);
+    }
+
+
+    public void validateOrganizer(User user, Lecture lecture) {
         if (user.isAdmin() || Objects.equals(user, lecture.getOrganizer())) return;
-        throw new AccessDeniedException(messageSource.getMessage(
-                "AbstractAccessDecisionManager.accessDenied", new Object[]{}, LocaleContextHolder.getLocale()
-        ));
+        throw new AccessDeniedException("Acesso negado. " +
+                "Apenas o organizador ou usuários autorizados podem fazer alterações a esta palestra.");
     }
 
     private void validateTags(Lecture lecture) {
