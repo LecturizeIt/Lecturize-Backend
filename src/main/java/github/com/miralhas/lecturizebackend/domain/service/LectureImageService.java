@@ -19,7 +19,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class LectureImageService {
 
-	private final LectureService lectureService;
 	private final LectureRepository lectureRepository;
 	private final ImageStorageService imageStorageService;
 
@@ -50,7 +49,7 @@ public class LectureImageService {
 		String existingFileName = null;
 		lectureImage.setFileName(newImageName);
 
-		var existingImage = lectureRepository.findImageByLectureId(lectureImage.getSolarPanelId());
+		var existingImage = lectureRepository.findImageByLectureId(lectureImage.getLectureId());
 		if (existingImage.isPresent()) {
 			existingFileName = existingImage.get().getFileName();
 			lectureRepository.deleteImage(existingImage.get());

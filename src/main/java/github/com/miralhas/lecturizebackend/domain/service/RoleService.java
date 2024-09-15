@@ -1,6 +1,6 @@
 package github.com.miralhas.lecturizebackend.domain.service;
 
-import github.com.miralhas.lecturizebackend.domain.exception.BusinessException;
+import github.com.miralhas.lecturizebackend.domain.exception.RoleNotFoundException;
 import github.com.miralhas.lecturizebackend.domain.model.auth.Role;
 import github.com.miralhas.lecturizebackend.domain.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +16,12 @@ public class RoleService {
 
     public Role getUserRole() {
         return roleRepository.findRoleByName(Role.Value.USER)
-                .orElseThrow(() -> new BusinessException("Role USER não foi criada!"));
+                .orElseThrow(() -> new RoleNotFoundException("USER"));
     }
 
 
     public Role getAdminRole() {
         return roleRepository.findRoleByName(Role.Value.ADMIN)
-                .orElseThrow(() -> new BusinessException("Role ADMIN não foi criada!"));
+                .orElseThrow(() -> new RoleNotFoundException("ADMIN"));
     }
 }
