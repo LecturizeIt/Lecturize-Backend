@@ -18,7 +18,7 @@ public class LectureMapper {
 
     public LectureDTO toModel(Lecture lecture) {
         LectureDTO lectureDTO = modelMapper.map(lecture, LectureDTO.class);
-        lectureDTO.setTags(lecture.getTags().stream().map(CategoryTag::getName).toList());
+        lectureDTO.setTags(getFormattedTags(lecture));
         return lectureDTO;
     }
 
@@ -27,10 +27,16 @@ public class LectureMapper {
     }
 
     public LectureSummaryDTO toSummaryModel(Lecture lecture) {
-        return modelMapper.map(lecture, LectureSummaryDTO.class);
+        LectureSummaryDTO lectureSummaryDTO = modelMapper.map(lecture, LectureSummaryDTO.class);
+        lectureSummaryDTO.setTags(getFormattedTags(lecture));
+        return lectureSummaryDTO;
     }
 
     public List<LectureSummaryDTO> toSummaryCollectionModel(List<Lecture> lectures) {
         return lectures.stream().map(this::toSummaryModel).toList();
+    }
+
+    private List<String> getFormattedTags(Lecture lecture) {
+        return lecture.getTags().stream().map(CategoryTag::getName).toList();
     }
 }

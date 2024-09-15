@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.util.StringUtils.hasText;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/lectures")
@@ -28,10 +30,11 @@ public class LectureResource {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<LectureSummaryDTO> getAllLectures() {
-        List<Lecture> lectures = lectureRepository.findAll();
+    public List<LectureSummaryDTO> getAllLectures(@RequestParam(required = false) String user) {
+        var lectures = hasText(user) ? lectureRepository.findAllUserLectures(user) : lectureRepository.findAll();
         return lectureMapper.toSummaryCollectionModel(lectures);
     }
+
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -39,6 +42,7 @@ public class LectureResource {
         Lecture lecture = lectureService.getLectureOrException(id);
         return lectureMapper.toModel(lecture);
     }
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -48,12 +52,14 @@ public class LectureResource {
         return lectureMapper.toModel(lecture);
     }
 
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public LectureDTO updateLecture(@RequestBody @Valid LectureInput lectureInput, @PathVariable Long id, JwtAuthenticationToken authToken) {
         Lecture lecture = lectureService.update(lectureInput, id, authToken);
         return lectureMapper.toModel(lecture);
     }
+
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

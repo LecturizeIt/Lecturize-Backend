@@ -15,7 +15,6 @@ import java.util.Objects;
 public class CategoryTag {
 
     @Id
-    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

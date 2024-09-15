@@ -5,7 +5,10 @@ import github.com.miralhas.lecturizebackend.domain.model.auth.User;
 import github.com.miralhas.lecturizebackend.domain.model.lecture.enums.Status;
 import github.com.miralhas.lecturizebackend.domain.model.lecture.enums.Type;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.util.StringUtils;
@@ -32,7 +35,7 @@ public class Lecture {
     @Column(nullable = false)
     private String lecturer;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @CreationTimestamp
@@ -55,9 +58,20 @@ public class Lecture {
 
     private String url;
 
+    private Integer maximumCapacity;
+
     @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(nullable = false)
     private User organizer;
+
+    @ToString.Exclude
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "lecture_participants",
+            joinColumns = @JoinColumn(name = "lecture_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> participants = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
@@ -69,19 +83,44 @@ public class Lecture {
 
     public void validateType() {
         switch (type) {
-            case Type.ONLINE -> onlineValidations();
-            case Type.PRESENTIAL -> presentialValidations();
+            case ONLINE -> onlineValidations();
+            case PRESENTIAL -> presentialValidations();
+            case HYBRID -> hybridValidations();
         }
+    }
+
+    private void hybridValidations() {
+        if (!StringUtils.hasText(url) || !StringUtils.hasText(address)) {
+            throw new BusinessException("Palestra do tipo [HYBRID] necessitam de um URL e Endereço. Adicione o campo 'url' e 'address' no corpo da requisição e seus respectivos valores");
+        }
+        validateCapacity();
+
     }
 
     private void onlineValidations() {
         if (StringUtils.hasText(address)) throw new BusinessException("Palestra do tipo [ONLINE] não pode possuir endereço");
-        if (!StringUtils.hasText(url)) throw new BusinessException("Palestra do tipo [ONLINE] necessita de um URL. Adicione o campo 'url' no corpo da requisição");
+        if (!StringUtils.hasText(url)) throw new BusinessException("Palestra do tipo [ONLINE] necessita de um URL. Adicione o campo 'url' no corpo da requisição e seu respectivo valor");
     }
 
     private void presentialValidations() {
         if (StringUtils.hasText(url)) throw new BusinessException("Palestra do tipo [PRESENTIAL] não pode possuir URL");
-        if (!StringUtils.hasText(address)) throw new BusinessException("Palestra do tipo [PRESENTIAL] necessita de um endereço. Adicione o campo 'address' no corpo da requisição");
+        if (!StringUtils.hasText(address)) throw new BusinessException("Palestra do tipo [PRESENTIAL] necessita de um endereço. Adicione o campo 'address' no corpo da requisição e seu respectivo valor");
+        validateCapacity();
+    }
+
+    private void validateCapacity() {
+        if (Objects.isNull(maximumCapacity)) {
+            throw new BusinessException(String.format("Palestra do tipo [%s] precisa especificar a capacidade máxima de visitantes no local de palestra." +
+                    " Adicione o campo 'maximumCapacity' no corpo da requisição e seu respectivo valor", type.getRawName()));
+        }
+    }
+
+    public String getTypeFormatted() {
+        return type.getDescription();
+    }
+
+    public String getStatusFormatted() {
+        return status.getDescription();
     }
 
     public void validateDateRange() {
