@@ -15,7 +15,7 @@ public class LectureRepositoryImpl implements LectureRepositoryQueries {
     @PersistenceContext
     private final EntityManager entityManager;
 
-	@Override
+    @Override
     @Transactional
     public LectureImage saveImage(LectureImage lectureImage) {
         return entityManager.merge(lectureImage);
@@ -26,4 +26,5 @@ public class LectureRepositoryImpl implements LectureRepositoryQueries {
     public void deleteImage(LectureImage lectureImage) {
         entityManager.remove(lectureImage);
     }
+
 }

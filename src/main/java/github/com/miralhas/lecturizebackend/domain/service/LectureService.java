@@ -31,7 +31,6 @@ public class LectureService {
                 .orElseThrow(() -> new LectureNotFoundException(id));
     }
 
-
     @Transactional
     public Lecture create(Lecture lecture, JwtAuthenticationToken authToken) {
         validateLecture(lecture);
@@ -41,7 +40,6 @@ public class LectureService {
         lecture = lectureRepository.save(lecture);
         return lecture;
     }
-
 
     @Transactional
     public Lecture update(@Valid LectureInput lectureInput, Long id, JwtAuthenticationToken authToken) {
@@ -54,7 +52,6 @@ public class LectureService {
         return lectureRepository.save(lecture);
     }
 
-
     @Transactional
     public void delete(Long id, JwtAuthenticationToken authToken) {
         Lecture lecture = getLectureOrException(id);
@@ -62,7 +59,6 @@ public class LectureService {
         validateOrganizer(user, lecture);
         lectureRepository.delete(lecture);
     }
-
 
     @Transactional
     public void confirmParticipant(Long id, JwtAuthenticationToken authToken) {
@@ -72,7 +68,6 @@ public class LectureService {
         lectureRepository.save(lecture);
     }
 
-
     @Transactional
     public void unconfirmParticipant(Long id, JwtAuthenticationToken authToken) {
         var lecture = getLectureOrException(id);
@@ -80,7 +75,6 @@ public class LectureService {
         lecture.getParticipants().remove(user);
         lectureRepository.save(lecture);
     }
-
 
     public void validateOrganizer(User user, Lecture lecture) {
         if (user.isAdmin() || Objects.equals(user, lecture.getOrganizer())) return;
@@ -99,4 +93,5 @@ public class LectureService {
         lecture.validateType();
         lecture.validateDateRange();
     }
+    
 }

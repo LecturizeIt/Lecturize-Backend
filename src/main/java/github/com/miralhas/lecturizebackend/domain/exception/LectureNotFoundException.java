@@ -9,4 +9,5 @@ public class LectureNotFoundException extends ResourceNotFoundException {
     public LectureNotFoundException(Long id, Throwable cause) {
         super("Palestra de código %d não encontrada".formatted(id), cause);
     }
+    
 }

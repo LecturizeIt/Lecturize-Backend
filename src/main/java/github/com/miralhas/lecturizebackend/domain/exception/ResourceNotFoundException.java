@@ -9,4 +9,5 @@ public abstract class ResourceNotFoundException extends BusinessException{
     public ResourceNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
+
 }

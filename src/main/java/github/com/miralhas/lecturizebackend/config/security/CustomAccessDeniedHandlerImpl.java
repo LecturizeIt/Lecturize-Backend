@@ -26,26 +26,17 @@ public class CustomAccessDeniedHandlerImpl implements AccessDeniedHandler {
     private final MessageSource messageSource;
 
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException ex)
-            throws IOException, ServletException {
-
-
-        var detail = messageSource.getMessage(
-                "AbstractAccessDecisionManager.accessDenied", new Object[]{}, LocaleContextHolder.getLocale()
-        );
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException ex) throws IOException, ServletException {
+        var detail = messageSource.getMessage("AbstractAccessDecisionManager.accessDenied", new Object[]{}, LocaleContextHolder.getLocale());
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, detail);
         problem.setTitle("Forbidden");
         problem.setInstance(URI.create(request.getRequestURI()));
         problem.setType(URI.create("http://localhost:8080/forbidden-access"));
-
-        String problemDetailAsString = new ObjectMapper()
-                .setSerializationInclusion(JsonInclude.Include.NON_ABSENT)
-                .writeValueAsString(problem);
-
+        String problemDetailAsString = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_ABSENT).writeValueAsString(problem);
         response.setStatus(problem.getStatus());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.getWriter().write(problemDetailAsString);
     }
-}
 
+}

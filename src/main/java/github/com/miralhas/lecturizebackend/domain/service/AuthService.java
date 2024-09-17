@@ -2,7 +2,6 @@ package github.com.miralhas.lecturizebackend.domain.service;
 
 import github.com.miralhas.lecturizebackend.api.dto.input.LoginInput;
 import github.com.miralhas.lecturizebackend.domain.exception.UserAlreadyExistsException;
-import github.com.miralhas.lecturizebackend.domain.model.auth.Role;
 import github.com.miralhas.lecturizebackend.domain.model.auth.User;
 import github.com.miralhas.lecturizebackend.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,17 +28,14 @@ public class AuthService {
     private final RoleService roleService;
 
     public User findUserByEmailOrException(String email) {
-        return userRepository.findUserByEmail(email)
-                .orElseThrow(() -> {
-                    var message = "Usuário de email '%s' não foi encontrado".formatted(email);
-                    return new UsernameNotFoundException(message);
-                });
+        return userRepository.findUserByEmail(email).orElseThrow(() -> {
+            var message = "Usuário de email '%s' não foi encontrado".formatted(email);
+            return new UsernameNotFoundException(message);
+        });
     }
 
     public Jwt authenticate(LoginInput loginInput) {
-        var authenticationToken = new UsernamePasswordAuthenticationToken(
-                loginInput.getEmail(), loginInput.getPassword()
-        );
+        var authenticationToken = new UsernamePasswordAuthenticationToken(loginInput.getEmail(), loginInput.getPassword());
         var authenticationResult = authenticationManager.authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authenticationResult);
         return tokenService.generateToken(authenticationResult);
@@ -55,13 +51,12 @@ public class AuthService {
     }
 
     private void checkIfUsernameOrEmailAreAvailiable(User user) {
-        userRepository.findUserByEmail(user.getEmail())
-                .map(u -> {
-                    throw new UserAlreadyExistsException(String.format("E-mail '%s' já está em uso", user.getEmail()));
-                });
-        userRepository.findUserByUsername(user.getUsername())
-                .map(u -> {
-                    throw new UserAlreadyExistsException(String.format("Username '%s' já está em uso", user.getUsername()));
-                });
+        userRepository.findUserByEmail(user.getEmail()).map(u -> {
+            throw new UserAlreadyExistsException(String.format("E-mail '%s' já está em uso", user.getEmail()));
+        });
+        userRepository.findUserByUsername(user.getUsername()).map(u -> {
+            throw new UserAlreadyExistsException(String.format("Username '%s' já está em uso", user.getUsername()));
+        });
     }
+
 }

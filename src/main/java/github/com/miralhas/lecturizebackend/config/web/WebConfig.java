@@ -8,8 +8,9 @@ import org.springframework.web.filter.ShallowEtagHeaderFilter;
 @Configuration
 public class WebConfig {
 
-	@Bean
-	public OncePerRequestFilter shallowEtagHeaderFilter() {
-		return new ShallowEtagHeaderFilter();
-	}
+    @Bean
+    public OncePerRequestFilter shallowEtagHeaderFilter() {
+        return new ShallowEtagHeaderFilter();
+    }
+
 }

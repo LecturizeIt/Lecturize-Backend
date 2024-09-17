@@ -36,11 +36,7 @@ public class User {
     private OffsetDateTime createdAt;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     @ToString.Exclude
     private Set<Role> roles;
 
@@ -51,7 +47,6 @@ public class User {
     public boolean isAdmin() {
         return roles.stream().anyMatch(r -> r.getName().equals(Role.Value.ADMIN));
     }
-
 
     @Override
     public final boolean equals(Object o) {
@@ -68,4 +63,5 @@ public class User {
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
+
 }

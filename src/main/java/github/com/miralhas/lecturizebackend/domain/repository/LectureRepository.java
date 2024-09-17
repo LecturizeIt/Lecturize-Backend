@@ -18,4 +18,5 @@ public interface LectureRepository extends JpaRepository<Lecture, Long>, Lecture
 
     @Query("from Lecture l JOIN l.participants lp where lp.id = :userId")
     List<Lecture> findLecturesByParticipantId(Long userId);
+
 }
