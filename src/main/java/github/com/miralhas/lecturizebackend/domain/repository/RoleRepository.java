@@ -10,4 +10,5 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
     @Query("from Role r where r.name = :name")
     Optional<Role> findRoleByName(Role.Value name);
+
 }

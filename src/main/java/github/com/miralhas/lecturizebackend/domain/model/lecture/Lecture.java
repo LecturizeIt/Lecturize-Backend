@@ -66,19 +66,11 @@ public class Lecture {
 
     @ToString.Exclude
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(
-            name = "lecture_participants",
-            joinColumns = @JoinColumn(name = "lecture_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    @JoinTable(name = "lecture_participants", joinColumns = @JoinColumn(name = "lecture_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> participants = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(
-            name = "lecture_tags",
-            joinColumns = @JoinColumn(name = "lecture_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_tag_id")
-    )
+    @JoinTable(name = "lecture_tags", joinColumns = @JoinColumn(name = "lecture_id"), inverseJoinColumns = @JoinColumn(name = "category_tag_id"))
     private Set<CategoryTag> tags = new HashSet<>();
 
     public void validateType() {
@@ -98,20 +90,22 @@ public class Lecture {
     }
 
     private void onlineValidations() {
-        if (StringUtils.hasText(address)) throw new BusinessException("Palestra do tipo [ONLINE] não pode possuir endereço");
-        if (!StringUtils.hasText(url)) throw new BusinessException("Palestra do tipo [ONLINE] necessita de um URL. Adicione o campo 'url' no corpo da requisição e seu respectivo valor");
+        if (StringUtils.hasText(address))
+            throw new BusinessException("Palestra do tipo [ONLINE] não pode possuir endereço");
+        if (!StringUtils.hasText(url))
+            throw new BusinessException("Palestra do tipo [ONLINE] necessita de um URL. Adicione o campo 'url' no corpo da requisição e seu respectivo valor");
     }
 
     private void presentialValidations() {
         if (StringUtils.hasText(url)) throw new BusinessException("Palestra do tipo [PRESENTIAL] não pode possuir URL");
-        if (!StringUtils.hasText(address)) throw new BusinessException("Palestra do tipo [PRESENTIAL] necessita de um endereço. Adicione o campo 'address' no corpo da requisição e seu respectivo valor");
+        if (!StringUtils.hasText(address))
+            throw new BusinessException("Palestra do tipo [PRESENTIAL] necessita de um endereço. Adicione o campo 'address' no corpo da requisição e seu respectivo valor");
         validateCapacity();
     }
 
     private void validateCapacity() {
         if (Objects.isNull(maximumCapacity)) {
-            throw new BusinessException(String.format("Palestra do tipo [%s] precisa especificar a capacidade máxima de visitantes no local de palestra." +
-                    " Adicione o campo 'maximumCapacity' no corpo da requisição e seu respectivo valor", type.getRawName()));
+            throw new BusinessException(String.format("Palestra do tipo [%s] precisa especificar a capacidade máxima de visitantes no local de palestra." + " Adicione o campo 'maximumCapacity' no corpo da requisição e seu respectivo valor", type.getRawName()));
         }
     }
 
@@ -125,10 +119,8 @@ public class Lecture {
 
     public void validateDateRange() {
         var isNotAfter = endsAt.isBefore(startsAt);
-        if (isNotAfter) throw new BusinessException(
-                "O horário do fim da palestra 'endsAt' não pode ser anterior ao horário de início 'startsAt'." +
-                        " Verifique os valores fornecidos e tente novamente."
-        );
+        if (isNotAfter)
+            throw new BusinessException("O horário do fim da palestra 'endsAt' não pode ser anterior ao horário de início 'startsAt'." + " Verifique os valores fornecidos e tente novamente.");
     }
 
     @Override
@@ -148,4 +140,3 @@ public class Lecture {
     }
 
 }
-

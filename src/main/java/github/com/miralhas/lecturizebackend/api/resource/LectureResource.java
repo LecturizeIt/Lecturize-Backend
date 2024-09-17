@@ -5,6 +5,7 @@ import github.com.miralhas.lecturizebackend.api.dto.LectureSummaryDTO;
 import github.com.miralhas.lecturizebackend.api.dto.input.LectureInput;
 import github.com.miralhas.lecturizebackend.api.dto_mapper.LectureMapper;
 import github.com.miralhas.lecturizebackend.api.dto_mapper.LectureUnmapper;
+import github.com.miralhas.lecturizebackend.config.swagger.interfaces.SwaggerLectureResource;
 import github.com.miralhas.lecturizebackend.domain.model.lecture.Lecture;
 import github.com.miralhas.lecturizebackend.domain.repository.LectureRepository;
 import github.com.miralhas.lecturizebackend.domain.service.LectureService;
@@ -21,13 +22,14 @@ import static org.springframework.util.StringUtils.hasText;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/lectures")
-public class LectureResource {
+public class LectureResource implements SwaggerLectureResource {
 
     private final LectureService lectureService;
     private final LectureMapper lectureMapper;
     private final LectureUnmapper lectureUnmapper;
     private final LectureRepository lectureRepository;
 
+    @Override
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<LectureSummaryDTO> getAllLectures(@RequestParam(required = false) String user) {
@@ -35,7 +37,7 @@ public class LectureResource {
         return lectureMapper.toSummaryCollectionModel(lectures);
     }
 
-
+    @Override
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public LectureDTO getLecture(@PathVariable Long id) {
@@ -43,7 +45,7 @@ public class LectureResource {
         return lectureMapper.toModel(lecture);
     }
 
-
+    @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public LectureDTO createLecture(@RequestBody @Valid LectureInput lectureInput, JwtAuthenticationToken authToken) {
@@ -52,7 +54,7 @@ public class LectureResource {
         return lectureMapper.toModel(lecture);
     }
 
-
+    @Override
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public LectureDTO updateLecture(@RequestBody @Valid LectureInput lectureInput, @PathVariable Long id, JwtAuthenticationToken authToken) {
@@ -60,7 +62,7 @@ public class LectureResource {
         return lectureMapper.toModel(lecture);
     }
 
-
+    @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteLecture(@PathVariable Long id, JwtAuthenticationToken authToken) {

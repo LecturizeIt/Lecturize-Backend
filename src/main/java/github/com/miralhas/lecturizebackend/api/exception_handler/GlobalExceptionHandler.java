@@ -39,14 +39,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleUncaughtException(Exception ex, WebRequest webRequest) {
         var status = HttpStatus.INTERNAL_SERVER_ERROR;
-        var detail = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se "
-                + "o problema persistir, entre em contato com o administrador do sistema.";
+        var detail = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se " + "o problema persistir, entre em contato com o administrador do sistema.";
         var problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
         problemDetail.setTitle("Erro de Sistema");
         problemDetail.setType(URI.create("https://localhost:8080/errors/erro-de-sistema"));
         return problemDetail;
     }
-
 
     @ExceptionHandler(AccessDeniedException.class)
     public ProblemDetail handleAccessDeniedException(AccessDeniedException ex, WebRequest webRequest) {
@@ -57,7 +55,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
-
     @ExceptionHandler(ResourceNotFoundException.class)
     public ProblemDetail handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest webRequest) {
         var problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
@@ -65,7 +62,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         problemDetail.setType(URI.create("http://localhost:8080/error/recurso-nao-encontrado"));
         return problemDetail;
     }
-
 
     @ExceptionHandler(BusinessException.class)
     public ProblemDetail handleBusinessException(BusinessException ex, WebRequest webRequest) {
@@ -75,18 +71,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
-
     @ExceptionHandler(BadCredentialsException.class)
     public ProblemDetail handleBadCredentialsException(BadCredentialsException ex, WebRequest webRequest) {
-        String detail = messageSource.getMessage(
-                "PasswordComparisonAuthenticator.badCredentials", new Object[]{}, LocaleContextHolder.getLocale()
-        );
+        String detail = messageSource.getMessage("PasswordComparisonAuthenticator.badCredentials", new Object[]{}, LocaleContextHolder.getLocale());
         var problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, detail);
         problemDetail.setTitle("Autenticação Inválida");
         problemDetail.setType(URI.create("http://localhost:8080/error/authentication"));
         return problemDetail;
     }
-
 
     @ExceptionHandler(AuthenticationException.class)
     public ProblemDetail handleAuthenticationException(AuthenticationException ex, WebRequest webRequest) {
@@ -96,30 +88,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
-
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         var errorsMap = new HashMap<String, String>();
         ex.getBindingResult().getFieldErrors().forEach(error -> {
             String message = messageSource.getMessage(error, LocaleContextHolder.getLocale());
             errorsMap.put(error.getField(), message);
         });
-
         var detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente";
         var problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, detail);
         problemDetail.setTitle("Campos Inválidos");
         problemDetail.setType(URI.create("http://localhost:8080/error/campos-invalidos"));
         problemDetail.setProperty("errors", errorsMap);
-
         return super.handleExceptionInternal(ex, problemDetail, headers, status, request);
     }
 
     @Override
-    protected ResponseEntity<Object> handleNoResourceFoundException(
-            NoResourceFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-
+    protected ResponseEntity<Object> handleNoResourceFoundException(NoResourceFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         var detail = "O recurso /%s que você tentou acessar, é inexistente.".formatted(ex.getResourcePath());
         var problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
         problemDetail.setTitle("Recurso Inexistente");
@@ -129,10 +114,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 
     @Override
-    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
-            HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        String detail = String.format("Método HTTP '%s' não é suportado por este endpoint. " +
-                "Por favor, use um dos seguintes métodos suportados: %s", ex.getMethod(), ex.getSupportedHttpMethods());
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        String detail = String.format("Método HTTP '%s' não é suportado por este endpoint. " + "Por favor, use um dos seguintes métodos suportados: %s", ex.getMethod(), ex.getSupportedHttpMethods());
         var problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.METHOD_NOT_ALLOWED, detail);
         problemDetail.setTitle("Método HTTP não permitido");
         problemDetail.setType(URI.create("https://localhost:8080/errors/metodo-nao-suportado"));
@@ -140,25 +123,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleTypeMismatch(
-            TypeMismatchException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         Object[] args = new Object[]{ex.getPropertyName(), ex.getValue(), ex.getRequiredType().getSimpleName()};
-        String defaultDetail = "Falha ao converter '" + args[0] + "' de valor: '" + args[1] + "'. " +
-                "Corrija e informe um valor compatível com o tipo '"+ args[2] +"'";
+        String defaultDetail = "Falha ao converter '" + args[0] + "' de valor: '" + args[1] + "'. " + "Corrija e informe um valor compatível com o tipo '" + args[2] + "'";
         ProblemDetail body = this.createProblemDetail(ex, status, defaultDetail, null, args, request);
         return this.handleExceptionInternal(ex, body, headers, status, request);
     }
 
 
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(
-            HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         if (ex.getCause() instanceof InvalidFormatException) {
             return handleInvalidFormat((InvalidFormatException) ex.getCause(), headers, status, request);
         }
-
         var detail = "O corpo da requisição está inválido. Verifique erros de sintaxe";
         var problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
         problemDetail.setTitle("Mensagem incompreensivel");
@@ -166,12 +143,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return super.handleExceptionInternal(ex, problemDetail, headers, status, request);
     }
 
-    private ResponseEntity<Object> handleInvalidFormat(
-            InvalidFormatException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-
+    private ResponseEntity<Object> handleInvalidFormat(InvalidFormatException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         String path = joinPath(ex.getPath());
-        String detail = String.format("A propriedade '%s' recebeu o valor '%s' que é de um tipo inválido. " +
-                "Corrija e informe um valor compatível com o tipo '%s'", path, ex.getValue(), ex.getTargetType().getSimpleName());
+        String detail = String.format("A propriedade '%s' recebeu o valor '%s' que é de um tipo inválido. " + "Corrija e informe um valor compatível com o tipo '%s'", path, ex.getValue(), ex.getTargetType().getSimpleName());
         var problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
         problemDetail.setTitle("Mensagem incompreensivel");
         problemDetail.setType(URI.create("https://localhost:8080/errors/mensagem-incompreensivel"));
@@ -179,9 +153,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private String joinPath(List<Reference> path) {
-        return path.stream()
-                .map(Reference::getFieldName)
-                .filter(Objects::nonNull)
-                .collect(Collectors.joining("."));
+        return path.stream().map(Reference::getFieldName).filter(Objects::nonNull).collect(Collectors.joining("."));
     }
+
 }

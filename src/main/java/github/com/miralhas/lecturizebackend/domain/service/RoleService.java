@@ -15,13 +15,11 @@ public class RoleService {
     private final RoleRepository roleRepository;
 
     public Role getUserRole() {
-        return roleRepository.findRoleByName(Role.Value.USER)
-                .orElseThrow(() -> new RoleNotFoundException("USER"));
+        return roleRepository.findRoleByName(Role.Value.USER).orElseThrow(() -> new RoleNotFoundException("USER"));
     }
-
 
     public Role getAdminRole() {
-        return roleRepository.findRoleByName(Role.Value.ADMIN)
-                .orElseThrow(() -> new RoleNotFoundException("ADMIN"));
+        return roleRepository.findRoleByName(Role.Value.ADMIN).orElseThrow(() -> new RoleNotFoundException("ADMIN"));
     }
+    
 }

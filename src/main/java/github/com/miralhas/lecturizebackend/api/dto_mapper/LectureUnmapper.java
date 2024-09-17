@@ -25,4 +25,5 @@ public class LectureUnmapper {
         if (lectureInput.getTags() == null) lectureInput.setTags(Set.of());
         modelMapper.map(lectureInput, lecture);
     }
+    
 }

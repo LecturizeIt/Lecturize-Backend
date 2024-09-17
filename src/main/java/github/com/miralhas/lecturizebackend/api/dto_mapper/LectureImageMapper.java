@@ -10,9 +10,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LectureImageMapper {
 
-	private final ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-	public LectureImageDTO toModel(LectureImage lectureImage) {
-		return modelMapper.map(lectureImage, LectureImageDTO.class);
-	}
+    public LectureImageDTO toModel(LectureImage lectureImage) {
+        return modelMapper.map(lectureImage, LectureImageDTO.class);
+    }
+
 }

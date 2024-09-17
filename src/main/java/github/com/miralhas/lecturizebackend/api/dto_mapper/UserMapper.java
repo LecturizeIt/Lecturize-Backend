@@ -23,7 +23,7 @@ public class UserMapper {
     }
 
     public UserSummaryDTO toSummaryModel(User user) {
-		return modelMapper.map(user, UserSummaryDTO.class);
+        return modelMapper.map(user, UserSummaryDTO.class);
     }
 
     public List<UserDTO> toCollectionModel(List<User> users) {

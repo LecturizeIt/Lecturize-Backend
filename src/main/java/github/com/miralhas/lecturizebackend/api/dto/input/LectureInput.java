@@ -46,4 +46,5 @@ public class LectureInput {
 
     @Valid
     private Set<TagIdInput> tags;
+    
 }

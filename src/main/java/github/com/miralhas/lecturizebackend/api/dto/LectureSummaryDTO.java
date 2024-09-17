@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class LectureSummaryDTO {
+
     private Long id;
     private String title;
     private String lecturer;
@@ -19,4 +20,5 @@ public class LectureSummaryDTO {
     private String type;
     private String status;
     private List<String> tags;
+    
 }

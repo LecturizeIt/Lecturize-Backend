@@ -9,12 +9,13 @@ import lombok.Setter;
 @Setter
 public class TagInput {
 
-	@NotBlank
-	private String name;
+    @NotBlank
+    private String name;
 
-	public CategoryTag formatTo() {
-		var tag = new CategoryTag();
-		tag.setName(name);
-		return tag;
-	}
+    public CategoryTag formatTo() {
+        var tag = new CategoryTag();
+        tag.setName(name);
+        return tag;
+    }
+
 }

@@ -12,19 +12,21 @@ import org.springframework.context.annotation.Profile;
 @RequiredArgsConstructor
 public class AuthStart implements CommandLineRunner {
 
-	private final RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-	@Override
-	public void run(String... args) throws Exception {
-		checkRole(Role.Value.USER);
-		checkRole(Role.Value.ADMIN);
-	}
+    @Override
+    public void run(String... args) throws Exception {
+        checkRole(Role.Value.USER);
+        checkRole(Role.Value.ADMIN);
+    }
 
-	private void checkRole(Role.Value value) {
-		roleRepository.findRoleByName(value).ifPresentOrElse(role -> {}, () -> {
-			var roleEntity = new Role();
-			roleEntity.setName(value);
-			roleRepository.save(roleEntity);
-		});
-	}
+    private void checkRole(Role.Value value) {
+        roleRepository.findRoleByName(value).ifPresentOrElse(role -> {
+        }, () -> {
+            var roleEntity = new Role();
+            roleEntity.setName(value);
+            roleRepository.save(roleEntity);
+        });
+    }
+
 }

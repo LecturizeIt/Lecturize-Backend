@@ -39,4 +39,5 @@ public class LectureMapper {
     private List<String> getFormattedTags(Lecture lecture) {
         return lecture.getTags().stream().map(CategoryTag::getName).toList();
     }
+    
 }

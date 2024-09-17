@@ -7,23 +7,26 @@ import java.io.InputStream;
 import java.util.UUID;
 
 public interface ImageStorageService {
-	InputStream retrieve(String fileName);
-	void save(NewImage newImage);
-	void remove(String fileName);
+    InputStream retrieve(String fileName);
 
-	default void replace(NewImage newImage, String oldFileName) {
-		save(newImage);
-		if (oldFileName != null) remove(oldFileName);
-	}
+    void save(NewImage newImage);
 
-	default String generateFileName(String originalName) {
-		return UUID.randomUUID() + "_" + originalName;
-	}
+    void remove(String fileName);
 
-	@Getter
-	@Builder
-	class NewImage {
-		private String fileName;
-		private InputStream inputStream;
-	}
+    default void replace(NewImage newImage, String oldFileName) {
+        save(newImage);
+        if (oldFileName != null) remove(oldFileName);
+    }
+
+    default String generateFileName(String originalName) {
+        return UUID.randomUUID() + "_" + originalName;
+    }
+
+    @Getter
+    @Builder
+    class NewImage {
+        private String fileName;
+        private InputStream inputStream;
+    }
+
 }

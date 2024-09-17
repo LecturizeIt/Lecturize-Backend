@@ -19,71 +19,52 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class LectureImageService {
 
-	private final LectureRepository lectureRepository;
-	private final ImageStorageService imageStorageService;
+    private final LectureRepository lectureRepository;
+    private final ImageStorageService imageStorageService;
 
-	public ResponseEntity<InputStreamResource> getImage(Long id, String acceptHeader)
-			throws HttpMediaTypeNotAcceptableException {
-		LectureImage lectureImage = getImageJsonOrException(id);
+    public ResponseEntity<InputStreamResource> getImage(Long id, String acceptHeader) throws HttpMediaTypeNotAcceptableException {
+        LectureImage lectureImage = getImageJsonOrException(id);
+        List<MediaType> providedMediaTypes = MediaType.parseMediaTypes(acceptHeader);
+        MediaType imageMediaType = MediaType.parseMediaType(lectureImage.getContentType());
+        checkMediaTypeCompability(imageMediaType, providedMediaTypes);
+        InputStream imageInputStream = imageStorageService.retrieve(lectureImage.getFileName());
+        return ResponseEntity.ok().contentType(imageMediaType).body(new InputStreamResource(imageInputStream));
+    }
 
-		List<MediaType> providedMediaTypes = MediaType.parseMediaTypes(acceptHeader);
-		MediaType imageMediaType = MediaType.parseMediaType(lectureImage.getContentType());
-		checkMediaTypeCompability(imageMediaType, providedMediaTypes);
-		InputStream imageInputStream = imageStorageService.retrieve(lectureImage.getFileName());
+    public LectureImage getImageJsonOrException(Long id) {
+        return lectureRepository.findImageByLectureId(id).orElseThrow(() -> new ImageNotFoundException(id));
+    }
 
-		return ResponseEntity.ok()
-				.contentType(imageMediaType)
-				.body(new InputStreamResource(imageInputStream));
-	}
+    @Transactional
+    public LectureImage save(LectureImage lectureImage, InputStream fileInputStream) {
+        String newImageName = imageStorageService.generateFileName(lectureImage.getFileName());
+        String existingFileName = null;
+        lectureImage.setFileName(newImageName);
+        var existingImage = lectureRepository.findImageByLectureId(lectureImage.getLectureId());
+        if (existingImage.isPresent()) {
+            existingFileName = existingImage.get().getFileName();
+            lectureRepository.deleteImage(existingImage.get());
+            lectureRepository.flush();
+        }
+        lectureImage = lectureRepository.saveImage(lectureImage);
+        lectureRepository.flush();
+        var newImage = ImageStorageService.NewImage.builder().fileName(lectureImage.getFileName()).inputStream(fileInputStream).build();
+        imageStorageService.replace(newImage, existingFileName);
+        return lectureImage;
+    }
 
+    @Transactional
+    public void delete(Long id) {
+        LectureImage lectureImage = getImageJsonOrException(id);
+        lectureRepository.deleteImage(lectureImage);
+        imageStorageService.remove(lectureImage.getFileName());
+    }
 
-	public LectureImage getImageJsonOrException(Long id) {
-		return lectureRepository.findImageByLectureId(id)
-				.orElseThrow(() -> new ImageNotFoundException(id));
-	}
-
-
-	@Transactional
-	public LectureImage save(LectureImage lectureImage, InputStream fileInputStream) {
-		String newImageName = imageStorageService.generateFileName(lectureImage.getFileName());
-		String existingFileName = null;
-		lectureImage.setFileName(newImageName);
-
-		var existingImage = lectureRepository.findImageByLectureId(lectureImage.getLectureId());
-		if (existingImage.isPresent()) {
-			existingFileName = existingImage.get().getFileName();
-			lectureRepository.deleteImage(existingImage.get());
-			lectureRepository.flush();
-		}
-
-		lectureImage = lectureRepository.saveImage(lectureImage);
-		lectureRepository.flush();
-
-		var newImage = ImageStorageService.NewImage.builder()
-				.fileName(lectureImage.getFileName())
-				.inputStream(fileInputStream)
-				.build();
-
-		imageStorageService.replace(newImage, existingFileName);
-		return lectureImage;
-	}
-
-
-	@Transactional
-	public void delete(Long id) {
-		LectureImage lectureImage = getImageJsonOrException(id);
-		lectureRepository.deleteImage(lectureImage);
-		imageStorageService.remove(lectureImage.getFileName());
-	}
-
-
-	private void checkMediaTypeCompability(MediaType imageMediaType, List<MediaType> providedMediaTypes)
-			throws HttpMediaTypeNotAcceptableException {
-		boolean compativel = providedMediaTypes.stream()
-				.anyMatch(mediaTypeAceita -> mediaTypeAceita.isCompatibleWith(imageMediaType));
-		if (!compativel) {
-			throw new HttpMediaTypeNotAcceptableException(List.of(imageMediaType));
-		}
-	}
+    private void checkMediaTypeCompability(MediaType imageMediaType, List<MediaType> providedMediaTypes) throws HttpMediaTypeNotAcceptableException {
+        boolean compativel = providedMediaTypes.stream().anyMatch(mediaTypeAceita -> mediaTypeAceita.isCompatibleWith(imageMediaType));
+        if (!compativel) {
+            throw new HttpMediaTypeNotAcceptableException(List.of(imageMediaType));
+        }
+    }
 
 }
