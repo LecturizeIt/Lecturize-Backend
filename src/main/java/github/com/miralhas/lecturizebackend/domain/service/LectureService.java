@@ -37,6 +37,7 @@ public class LectureService {
         validateTags(lecture);
         var user = authService.findUserByEmailOrException(authToken.getName());
         lecture.setOrganizer(user);
+        lecture.getParticipants().add(user);
         lecture = lectureRepository.save(lecture);
         return lecture;
     }
