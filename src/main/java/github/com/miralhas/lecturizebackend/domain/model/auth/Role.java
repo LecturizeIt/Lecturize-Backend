@@ -23,9 +23,7 @@ public class Role {
 
     @Getter
     public enum Value {
-        USER(new SimpleGrantedAuthority("USER")),
-        ADMIN(new SimpleGrantedAuthority("ADMIN"));
-
+        USER(new SimpleGrantedAuthority("USER")), ADMIN(new SimpleGrantedAuthority("ADMIN"));
         private final SimpleGrantedAuthority authority;
 
         Value(SimpleGrantedAuthority authority) {
@@ -48,4 +46,5 @@ public class Role {
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
+
 }

@@ -6,5 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LectureTagsDTO {
+
     private String tag;
+    
 }

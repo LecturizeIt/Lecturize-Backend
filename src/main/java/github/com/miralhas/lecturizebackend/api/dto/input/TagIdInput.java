@@ -7,6 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TagIdInput {
+
     @NotNull
     private Long id;
+
 }

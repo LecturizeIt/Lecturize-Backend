@@ -14,40 +14,40 @@ import java.nio.file.Path;
 @Service
 public class LocalImageStorageService implements ImageStorageService {
 
-	@Value("${lecturizeit.storage.local.dir.images}")
-	private Path storagePath;
+    @Value("${lecturizeit.storage.local.dir.images}")
+    private Path storagePath;
 
-	@Override
-	public InputStream retrieve(String fileName) {
-		try {
-			return Files.newInputStream(getFilePath(fileName));
-		} catch (IOException e) {
-			throw new StorageException("Não foi possivel recuperar o arquivo de nome %s".formatted(fileName), e);
-		}
-	}
+    @Override
+    public InputStream retrieve(String fileName) {
+        try {
+            return Files.newInputStream(getFilePath(fileName));
+        } catch (IOException e) {
+            throw new StorageException("Não foi possivel recuperar o arquivo de nome %s".formatted(fileName), e);
+        }
+    }
 
-	@Override
-	public void save(NewImage newImage) {
-		Path filePath = getFilePath(newImage.getFileName());
-		try {
-			FileCopyUtils.copy(newImage.getInputStream(), Files.newOutputStream(filePath));
-		} catch (IOException e) {
-			throw new StorageException("Não foi possivel armazenar o arquivo de nome %s"
-					.formatted(newImage.getFileName()), e);
-		}
-	}
+    @Override
+    public void save(NewImage newImage) {
+        Path filePath = getFilePath(newImage.getFileName());
+        try {
+            FileCopyUtils.copy(newImage.getInputStream(), Files.newOutputStream(filePath));
+        } catch (IOException e) {
+            throw new StorageException("Não foi possivel armazenar o arquivo de nome %s".formatted(newImage.getFileName()), e);
+        }
+    }
 
-	@Override
-	public void remove(String fileName) {
-		Path filePath = getFilePath(fileName);
-		try {
-			Files.deleteIfExists(filePath);
-		} catch (IOException e) {
-			throw new StorageException("Não foi possível excluir o arquivo", e);
-		}
-	}
+    @Override
+    public void remove(String fileName) {
+        Path filePath = getFilePath(fileName);
+        try {
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            throw new StorageException("Não foi possível excluir o arquivo", e);
+        }
+    }
 
-	private Path getFilePath(String fileName) {
-		return storagePath.resolve(fileName);
-	}
+    private Path getFilePath(String fileName) {
+        return storagePath.resolve(fileName);
+    }
+
 }

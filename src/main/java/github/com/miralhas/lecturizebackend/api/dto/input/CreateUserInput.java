@@ -21,4 +21,5 @@ public class CreateUserInput {
     @NotBlank
     @Size(min = 3)
     private String password;
+
 }

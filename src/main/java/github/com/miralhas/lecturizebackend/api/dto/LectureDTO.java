@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 public class LectureDTO {
+
     private String id;
     private String title;
     private String lecturer;
@@ -24,4 +25,5 @@ public class LectureDTO {
     private List<CategoryTag> tags;
     private Integer maximumCapacity;
     private UserSummaryDTO organizer;
+    
 }

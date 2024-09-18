@@ -12,9 +12,7 @@ public class EnumPatternValidator implements ConstraintValidator<EnumPattern, Ch
 
     @Override
     public void initialize(EnumPattern constraint) {
-        acceptedValues = Stream.of(constraint.enumClass().getEnumConstants())
-                .map(Enum::name)
-                .toList();
+        acceptedValues = Stream.of(constraint.enumClass().getEnumConstants()).map(Enum::name).toList();
     }
 
     @Override
@@ -23,9 +21,9 @@ public class EnumPatternValidator implements ConstraintValidator<EnumPattern, Ch
         boolean isValid = acceptedValues.contains(value.toString());
         if (!isValid) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("Valor Inválido. Valores aceitos são: %s"
-                    .formatted(acceptedValues)).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Valor Inválido. Valores aceitos são: %s".formatted(acceptedValues)).addConstraintViolation();
         }
         return isValid;
     }
+
 }

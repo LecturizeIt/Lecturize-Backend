@@ -21,15 +21,7 @@ public class TokenService {
     public Jwt generateToken(Authentication authentication) {
         Instant now = Instant.now();
         var scopes = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-
-        JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("lecturize-it")
-                .subject(authentication.getName())
-                .issuedAt(now)
-                .expiresAt(now.plusSeconds(TOKEN_EXPIRATION_TIME))
-                .claim("scope", scopes)
-                .build();
-
+        JwtClaimsSet claims = JwtClaimsSet.builder().issuer("lecturize-it").subject(authentication.getName()).issuedAt(now).expiresAt(now.plusSeconds(TOKEN_EXPIRATION_TIME)).claim("scope", scopes).build();
         var header = JwsHeader.with(SignatureAlgorithm.RS256).type("JWT").build();
         return jwtEncoder.encode(JwtEncoderParameters.from(header, claims));
     }

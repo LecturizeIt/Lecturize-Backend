@@ -2,6 +2,7 @@ package github.com.miralhas.lecturizebackend.api.resource;
 
 import github.com.miralhas.lecturizebackend.api.dto.UserSummaryDTO;
 import github.com.miralhas.lecturizebackend.api.dto_mapper.UserMapper;
+import github.com.miralhas.lecturizebackend.config.swagger.interfaces.SwaggerLectureParticipantsResource;
 import github.com.miralhas.lecturizebackend.domain.service.LectureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,28 +14,31 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/lectures/{id}")
-public class LectureParticipantsResource {
+public class LectureParticipantsResource implements SwaggerLectureParticipantsResource {
 
-	private final LectureService lectureService;
-	private final UserMapper userMapper;
+    private final LectureService lectureService;
+    private final UserMapper userMapper;
 
-	@PutMapping("/participate")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void participate(@PathVariable Long id, JwtAuthenticationToken authToken) {
-		lectureService.confirmParticipant(id, authToken);
-	}
+    @Override
+    @PutMapping("/participate")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void participate(@PathVariable Long id, JwtAuthenticationToken authToken) {
+        lectureService.confirmParticipant(id, authToken);
+    }
 
-	@PutMapping("/unparticipate")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void unparticipate(@PathVariable Long id, JwtAuthenticationToken authToken) {
-		lectureService.unconfirmParticipant(id, authToken);
-	}
+    @Override
+    @PutMapping("/unparticipate")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void unparticipate(@PathVariable Long id, JwtAuthenticationToken authToken) {
+        lectureService.unconfirmParticipant(id, authToken);
+    }
 
-	@GetMapping("/participants")
-	@ResponseStatus(HttpStatus.OK)
-	public List<UserSummaryDTO> getAllLectureParticipants(@PathVariable Long id) {
-		var lectureParticipants = lectureService.getLectureOrException(id).getParticipants().stream().toList();
-		return userMapper.toSummaryCollectionModel(lectureParticipants);
-	}
+    @Override
+    @GetMapping("/participants")
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserSummaryDTO> getAllLectureParticipants(@PathVariable Long id) {
+        var lectureParticipants = lectureService.getLectureOrException(id).getParticipants().stream().toList();
+        return userMapper.toSummaryCollectionModel(lectureParticipants);
+    }
 
 }
