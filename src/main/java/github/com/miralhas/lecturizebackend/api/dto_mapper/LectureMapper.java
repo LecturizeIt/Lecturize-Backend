@@ -17,9 +17,7 @@ public class LectureMapper {
     private final ModelMapper modelMapper;
 
     public LectureDTO toModel(Lecture lecture) {
-        LectureDTO lectureDTO = modelMapper.map(lecture, LectureDTO.class);
-        lectureDTO.setTags(getFormattedTags(lecture));
-        return lectureDTO;
+		return modelMapper.map(lecture, LectureDTO.class);
     }
 
     public List<LectureDTO> toCollectionModel(List<Lecture> lectures) {

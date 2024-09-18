@@ -1,5 +1,6 @@
 package github.com.miralhas.lecturizebackend.api.dto;
 
+import github.com.miralhas.lecturizebackend.domain.model.lecture.CategoryTag;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,7 +21,7 @@ public class LectureDTO {
     private String status;
     private String url;
     private String address;
-    private List<String> tags;
+    private List<CategoryTag> tags;
     private Integer maximumCapacity;
     private UserSummaryDTO organizer;
 }
