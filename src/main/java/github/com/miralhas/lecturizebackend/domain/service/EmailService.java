@@ -2,6 +2,7 @@ package github.com.miralhas.lecturizebackend.domain.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -17,10 +18,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Service
+@RequiredArgsConstructor
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
     public void sendEmailWithHtmlContent(String to, String subject, String htmlFilePath) throws MessagingException, IOException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
