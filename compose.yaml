@@ -30,7 +30,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=admin
       - LOCAL_IMAGE_DIRECTORY=/app/images
       - SPRING_PROFILES_ACTIVE=prod
-      - SMTP_PASSWORD=ovdnitutnuvcvqxr
+      - SMTP_PASSWORD=${SMTP}
     volumes:
       - api-images:/app/images
     networks:
