@@ -48,7 +48,13 @@ services:
       - lecturizeit-network
     depends_on:
       - lecturizeit-api
-    restart: always
+
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./nginx/certbot/www/:/var/www/certbot/:rw
+      - ./nginx/certbot/conf/:/etc/letsencrypt/:rw
+
 
 volumes:
   mysql-data:
