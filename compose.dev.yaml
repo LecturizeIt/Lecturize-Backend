@@ -1,16 +1,11 @@
 services:
   lecturizeit-proxy:
-    build:
-      context: ./nginx
-      dockerfile: dev/Dockerfile
-    image: lecturizeit-proxy:latest
+    image: nginx:1.27.1-alpine
     ports:
       - "80:80"
     networks:
       - lecturizeit-network
     depends_on:
       - lecturizeit-api
-
-networks:
-  lecturizeit-network:
-    name: lecturizeit-network
+    volumes:
+      - ./nginx/dev.conf:/etc/nginx/conf.d/default.conf
