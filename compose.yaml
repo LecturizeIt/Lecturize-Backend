@@ -36,18 +36,6 @@ services:
     networks:
       - lecturizeit-network
 
-  lecturizeit-proxy:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    image: lecturizeit-proxy:latest
-    ports:
-      - "80:80"
-    networks:
-      - lecturizeit-network
-    depends_on:
-      - lecturizeit-api
-
 volumes:
   mysql-data:
   api-images:

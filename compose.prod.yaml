@@ -1,0 +1,16 @@
+services:
+  lecturizeit-proxy:
+    build:
+      context: ./nginx
+      dockerfile: prod/Dockerfile
+    image: lecturizeit-proxy:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - lecturizeit-network
+    depends_on:
+      - lecturizeit-api
+    volumes:
+      - /etc/letsencrypt/ssl/fullchain.pem:/etc/nginx/ssl/fullchain.pem
+      - /etc/letsencrypt/ssl/privkey.pem:/etc/nginx/ssl/privkey.pem

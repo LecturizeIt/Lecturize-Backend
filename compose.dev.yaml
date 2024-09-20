@@ -1,0 +1,16 @@
+services:
+  lecturizeit-proxy:
+    build:
+      context: ./nginx
+      dockerfile: dev/Dockerfile
+    image: lecturizeit-proxy:latest
+    ports:
+      - "80:80"
+    networks:
+      - lecturizeit-network
+    depends_on:
+      - lecturizeit-api
+
+networks:
+  lecturizeit-network:
+    name: lecturizeit-network
