@@ -36,26 +36,6 @@ services:
     networks:
       - lecturizeit-network
 
-  lecturizeit-proxy:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    image: lecturizeit-proxy:latest
-    ports:
-      - "80:80"
-      - "443:443"
-    networks:
-      - lecturizeit-network
-    depends_on:
-      - lecturizeit-api
-
-  certbot:
-    image: certbot/certbot:latest
-    volumes:
-      - ./nginx/certbot/www/:/var/www/certbot/:rw
-      - ./nginx/certbot/conf/:/etc/letsencrypt/:rw
-
-
 volumes:
   mysql-data:
   api-images:
