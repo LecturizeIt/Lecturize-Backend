@@ -10,3 +10,7 @@ services:
       - lecturizeit-network
     depends_on:
       - lecturizeit-api
+
+networks:
+  lecturizeit-network:
+    name: lecturizeit-network

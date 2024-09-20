@@ -9,6 +9,8 @@ Write-Host "Running Maven clean install..."
 Write-Host "Setting environment variables and starting Docker containers..."
 # $env:MYSQL_DATABASE = "lecturizeit"
 # $env:MYSQL_PASSWORD = "admin"
-docker-compose up --build
+docker compose -f compose.yaml -f compose.dev.yaml up --force-recreate
+
+docker compose down
 
 Write-Host "Script completed."
