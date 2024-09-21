@@ -29,7 +29,7 @@ public interface SwaggerLectureImageResource {
 
     @Operation(summary = "Update lecture image", description = "Updates the lecture image associated with the given lecture ID. Requires multipart file input.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Lecture image updated successfully"), @ApiResponse(responseCode = "400", description = "Invalid input or file format"), @ApiResponse(responseCode = "404", description = "Lecture or image not found"), @ApiResponse(responseCode = "403", description = "User is not authorized to update this lecture image")})
-    LectureImageDTO updateLectureImage(@Parameter(description = "ID of the lecture", required = true) @PathVariable Long id, @Parameter(description = "Lecture image details for update", required = true) @Valid @RequestPart LectureImageInput lectureImageInput, @Parameter(hidden = true) JwtAuthenticationToken authToken) throws IOException;
+    LectureImageDTO updateLectureImage(@Parameter(description = "ID of the lecture", required = true) @PathVariable Long id, @Parameter(description = "Lecture image details for update", required = true) @Valid LectureImageInput lectureImageInput, @Parameter(hidden = true) JwtAuthenticationToken authToken) throws IOException;
 
     @Operation(summary = "Delete lecture image", description = "Deletes the lecture image associated with the given lecture ID.")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Lecture image deleted successfully"), @ApiResponse(responseCode = "404", description = "Lecture or image not found"), @ApiResponse(responseCode = "403", description = "User is not authorized to delete this lecture image")})
