@@ -60,16 +60,12 @@ public class SecurityConfig {
             resourceServer.accessDeniedHandler(customAccessDeniedHandler);
             resourceServer.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
         }).authorizeHttpRequests(authz -> {
+            authz.requestMatchers("/resources/**", "/static/**", "/templates/**", "/swagger-ui/**").permitAll();
             authz.requestMatchers(HttpMethod.GET, "/api/auth/user").authenticated();
             authz.requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll();
             authz.requestMatchers(HttpMethod.GET, "/**").permitAll();
             authz.anyRequest().authenticated();
         }).build();
-    }
-
-    @Bean
-    WebSecurityCustomizer ignoringCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/resources/**", "/static/**", "/templates/**", "/swagger-ui/**");
     }
 
     @Bean

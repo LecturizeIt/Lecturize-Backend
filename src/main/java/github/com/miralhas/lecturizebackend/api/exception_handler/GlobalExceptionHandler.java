@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import github.com.miralhas.lecturizebackend.domain.exception.BusinessException;
 import github.com.miralhas.lecturizebackend.domain.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -29,15 +30,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Order(Ordered.HIGHEST_PRECEDENCE)
+@Log4j2
 @RestControllerAdvice
 @RequiredArgsConstructor
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
 
     private final MessageSource messageSource;
 
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleUncaughtException(Exception ex, WebRequest webRequest) {
+        log.error("Internal Server Error Exception:", ex);
         var status = HttpStatus.INTERNAL_SERVER_ERROR;
         var detail = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se " + "o problema persistir, entre em contato com o administrador do sistema.";
         var problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
