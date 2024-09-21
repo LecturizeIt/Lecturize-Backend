@@ -25,7 +25,7 @@ services:
       mysqldb:
         condition: service_healthy
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/lecturizeit
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/lecturizeit?createDatabaseIfNotExist=true&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=admin
       - LOCAL_IMAGE_DIRECTORY=/app/images
