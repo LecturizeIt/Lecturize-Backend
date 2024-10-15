@@ -8,15 +8,20 @@ import github.com.miralhas.lecturizebackend.domain.model.lecture.Lecture;
 import github.com.miralhas.lecturizebackend.domain.repository.LectureRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
+@EnableAsync
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class LectureService {
@@ -25,6 +30,7 @@ public class LectureService {
     private final AuthService authService;
     private final LectureUnmapper lectureUnmapper;
     private final CategoryTagService categoryTagService;
+    private final LectureImageService lectureImageService;
 
     public Lecture getLectureOrException(Long id) {
         return lectureRepository.findById(id)
@@ -58,7 +64,11 @@ public class LectureService {
         Lecture lecture = getLectureOrException(id);
         User user = authService.findUserByEmailOrException(authToken.getName());
         validateOrganizer(user, lecture);
-        lectureRepository.delete(lecture);
+        lectureRepository.findImageByLectureId(id).ifPresent(l -> {
+            lectureImageService.delete(id);
+            lectureRepository.deleteById(id);
+            lectureRepository.flush();
+        });
     }
 
     @Transactional
@@ -75,6 +85,15 @@ public class LectureService {
         var user = authService.findUserByEmailOrException(authToken.getName());
         lecture.getParticipants().remove(user);
         lectureRepository.save(lecture);
+    }
+
+    @Async
+    @Transactional
+    @Scheduled(fixedRateString = "${scheduling.time}")
+    public void scheduleLectureStatus() {
+        List<Lecture> lectures = lectureRepository.findAllLecturesScheduling();
+        if (lectures.isEmpty()) return;
+        lectures.forEach(Lecture::changeStatus);
     }
 
     public void validateOrganizer(User user, Lecture lecture) {
