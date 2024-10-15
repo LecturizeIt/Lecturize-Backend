@@ -123,6 +123,18 @@ public class Lecture {
             throw new BusinessException("O horário do fim da palestra 'endsAt' não pode ser anterior ao horário de início 'startsAt'." + " Verifique os valores fornecidos e tente novamente.");
     }
 
+    public void changeStatus() {
+        var now = OffsetDateTime.now();
+        System.out.println(status);
+        if (now.isAfter(startsAt) && status == Status.SCHEDULED) {
+            status = Status.IN_PROGRESS;
+        }
+
+        if (endsAt.isBefore(now) && status == Status.IN_PROGRESS) {
+            status = Status.COMPLETED;
+        }
+    }
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

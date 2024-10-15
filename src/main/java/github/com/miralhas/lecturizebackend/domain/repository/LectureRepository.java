@@ -19,4 +19,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Long>, Lecture
     @Query("from Lecture l JOIN l.participants lp where lp.id = :userId")
     List<Lecture> findLecturesByParticipantId(Long userId);
 
+    @Query("from Lecture l where l.status = 'SCHEDULED' or l.status = 'IN_PROGRESS'")
+    List<Lecture> findAllLecturesScheduling();
+
 }
