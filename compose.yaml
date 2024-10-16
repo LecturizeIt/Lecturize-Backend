@@ -1,6 +1,7 @@
 services:
   mysqldb:
     image: mysql:8.0.33
+    command: --skip-performance-schema --skip-mysqlx
     ports:
       - "3307:3306"
     environment:
@@ -35,7 +36,10 @@ services:
       - api-images:/app/images
     networks:
       - lecturizeit-network
-
+    deploy:
+      resources:
+        limits:
+          memory: 180M
 volumes:
   mysql-data:
   api-images:
