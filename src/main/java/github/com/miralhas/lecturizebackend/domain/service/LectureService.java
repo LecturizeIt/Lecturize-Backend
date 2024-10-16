@@ -66,9 +66,8 @@ public class LectureService {
         validateOrganizer(user, lecture);
         lectureRepository.findImageByLectureId(id).ifPresent(l -> {
             lectureImageService.delete(id);
-            lectureRepository.deleteById(id);
-            lectureRepository.flush();
         });
+        lectureRepository.deleteById(id);
     }
 
     @Transactional

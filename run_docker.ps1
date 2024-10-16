@@ -11,6 +11,4 @@ Write-Host "Setting environment variables and starting Docker containers..."
 # $env:MYSQL_PASSWORD = "admin"
 docker compose -f compose.yaml -f compose.dev.yaml up -d --build --force-recreate
 
-docker compose down
-
 Write-Host "Script completed."
