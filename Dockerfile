@@ -11,5 +11,4 @@ RUN mkdir -p /app/images
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-XX:+UseSerialGC", "-Xss512k", "-XX:MaxRAM=100m", "-Xmx50M", "-Xms50m", "-jar", "/app.jar"]
-
+ENTRYPOINT ["java", "-jar", "/app.jar"]
