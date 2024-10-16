@@ -9,8 +9,8 @@ import lombok.ToString;
 @RequiredArgsConstructor
 public enum Status {
 
-    IN_PROGRESS("Em progresso"),
-    COMPLETED("Completada"),
+    IN_PROGRESS("Em andamento"),
+    COMPLETED("Finalziada"),
     CANCELED("Cancelada"),
     SCHEDULED("Agendada");
 
