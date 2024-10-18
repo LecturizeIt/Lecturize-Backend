@@ -2,12 +2,14 @@ package github.com.miralhas.lecturizebackend.domain.service;
 
 import github.com.miralhas.lecturizebackend.api.dto.input.LectureInput;
 import github.com.miralhas.lecturizebackend.api.dto_mapper.LectureUnmapper;
+import github.com.miralhas.lecturizebackend.domain.event.UserParticipatingLectureEvent;
 import github.com.miralhas.lecturizebackend.domain.exception.LectureNotFoundException;
 import github.com.miralhas.lecturizebackend.domain.model.auth.User;
 import github.com.miralhas.lecturizebackend.domain.model.lecture.Lecture;
 import github.com.miralhas.lecturizebackend.domain.repository.LectureRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -31,6 +33,7 @@ public class LectureService {
     private final LectureUnmapper lectureUnmapper;
     private final CategoryTagService categoryTagService;
     private final LectureImageService lectureImageService;
+    private final ApplicationEventPublisher events;
 
     public Lecture getLectureOrException(Long id) {
         return lectureRepository.findById(id)
@@ -76,6 +79,7 @@ public class LectureService {
         var user = authService.findUserByEmailOrException(authToken.getName());
         lecture.getParticipants().add(user);
         lectureRepository.save(lecture);
+        events.publishEvent(new UserParticipatingLectureEvent(user, lecture));
     }
 
     @Transactional
