@@ -14,3 +14,5 @@ echo "Setting environment variables and starting Docker containers..."
 docker compose -f compose.yaml -f compose.dev.yaml up -d --build --force-recreate
 
 echo "Script completed."
+
+#docker compose down --remove-orphans
