@@ -19,11 +19,6 @@ public class LectureMetricsService {
         return metricRepository.findById(id).orElseThrow(() -> new MetricNotFoundException(id));
     }
 
-    public Metric findLectureMetrics(Long id) {
-        lectureService.getLectureOrException(id);
-        return findMetricByIdOrException(id);
-    }
-
     @Transactional
     public void updateLectureTimesVisited(Long id) {
         var metric = findMetricByIdOrException(id);

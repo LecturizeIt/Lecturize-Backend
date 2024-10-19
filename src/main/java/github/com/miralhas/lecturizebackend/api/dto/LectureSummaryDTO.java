@@ -20,5 +20,6 @@ public class LectureSummaryDTO {
     private String type;
     private String status;
     private List<String> tags;
+    private LectureMetricsDTO metrics;
     
 }

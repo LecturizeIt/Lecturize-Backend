@@ -25,5 +25,6 @@ public class LectureDTO {
     private List<CategoryTag> tags;
     private Integer maximumCapacity;
     private UserSummaryDTO organizer;
+    private LectureMetricsDTO metrics;
     
 }
