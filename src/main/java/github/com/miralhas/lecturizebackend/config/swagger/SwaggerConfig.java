@@ -46,6 +46,6 @@ public class SwaggerConfig {
 
         SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearer-key");
         
-        return new OpenAPI().info(info).servers(List.of(devServer, prodServer)).components(new Components().addSecuritySchemes("bearer-key", securityScheme)).addSecurityItem(securityRequirement);
+        return new OpenAPI().info(info).components(new Components().addSecuritySchemes("bearer-key", securityScheme)).addSecurityItem(securityRequirement);
     }
 }

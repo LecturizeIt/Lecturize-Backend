@@ -73,6 +73,9 @@ public class Lecture {
     @JoinTable(name = "lecture_tags", joinColumns = @JoinColumn(name = "lecture_id"), inverseJoinColumns = @JoinColumn(name = "category_tag_id"))
     private Set<CategoryTag> tags = new HashSet<>();
 
+    @OneToOne(mappedBy = "lecture", optional = false, cascade = CascadeType.ALL)
+    private Metric metrics;
+
     public void validateType() {
         switch (type) {
             case ONLINE -> onlineValidations();
