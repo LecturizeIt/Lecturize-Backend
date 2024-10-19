@@ -6,7 +6,9 @@ import github.com.miralhas.lecturizebackend.domain.event.UserParticipatingLectur
 import github.com.miralhas.lecturizebackend.domain.exception.LectureNotFoundException;
 import github.com.miralhas.lecturizebackend.domain.model.auth.User;
 import github.com.miralhas.lecturizebackend.domain.model.lecture.Lecture;
+import github.com.miralhas.lecturizebackend.domain.model.lecture.Metric;
 import github.com.miralhas.lecturizebackend.domain.repository.LectureRepository;
+import github.com.miralhas.lecturizebackend.domain.repository.MetricRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -34,6 +36,7 @@ public class LectureService {
     private final CategoryTagService categoryTagService;
     private final LectureImageService lectureImageService;
     private final ApplicationEventPublisher events;
+    private final MetricRepository metricRepository;
 
     public Lecture getLectureOrException(Long id) {
         return lectureRepository.findById(id)
@@ -48,6 +51,11 @@ public class LectureService {
         lecture.setOrganizer(user);
         lecture.getParticipants().add(user);
         lecture = lectureRepository.save(lecture);
+
+        var metric = new Metric();
+        metric.setLecture(lecture);
+        metricRepository.save(metric);
+
         return lecture;
     }
 
