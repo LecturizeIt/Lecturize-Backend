@@ -8,7 +8,9 @@ import lombok.ToString;
 @ToString
 @RequiredArgsConstructor
 public enum Type {
-    ONLINE("Online", "ONLINE"), PRESENTIAL("Presencial", "PRESENTIAL"), HYBRID("Híbrido", "HYBRID");
+    ONLINE("Online", "ONLINE"),
+    PRESENTIAL("Presencial", "PRESENTIAL"),
+    HYBRID("Híbrido", "HYBRID");
 
     private final String description;
     private final String rawName;
