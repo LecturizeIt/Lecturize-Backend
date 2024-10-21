@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import github.com.miralhas.lecturizebackend.domain.exception.BusinessException;
 import github.com.miralhas.lecturizebackend.domain.exception.ResourceNotFoundException;
+import github.com.miralhas.lecturizebackend.domain.exception.UserAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.TypeMismatchException;
@@ -45,6 +46,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
         var problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
         problemDetail.setTitle("Erro de Sistema");
         problemDetail.setType(URI.create("https://localhost:8080/errors/erro-de-sistema"));
+        return problemDetail;
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ProblemDetail handleUserAlreadyExistsException(UserAlreadyExistsException ex, WebRequest webRequest) {
+        var errors = ex.getErrors();
+        var detail = ex.getMessage();
+        var status = HttpStatus.CONFLICT;
+        var problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
+        problemDetail.setTitle("User Already Exists");
+        problemDetail.setType(URI.create("https://localhost:8080/errors/user-already-exists"));
+        problemDetail.setProperty("errors", errors);
         return problemDetail;
     }
 
