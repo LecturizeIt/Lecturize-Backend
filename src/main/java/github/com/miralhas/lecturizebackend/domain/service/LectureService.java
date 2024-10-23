@@ -54,7 +54,8 @@ public class LectureService {
 
         var metric = new Metric();
         metric.setLecture(lecture);
-        metricRepository.save(metric);
+        metric = metricRepository.save(metric);
+        lecture.setMetrics(metric);
 
         return lecture;
     }

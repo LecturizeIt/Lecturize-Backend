@@ -14,6 +14,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -51,12 +53,14 @@ public class AuthService {
     }
 
     private void checkIfUsernameOrEmailAreAvailiable(User user) {
-        userRepository.findUserByEmail(user.getEmail()).map(u -> {
-            throw new UserAlreadyExistsException(String.format("E-mail '%s' já está em uso", user.getEmail()));
-        });
-        userRepository.findUserByUsername(user.getUsername()).map(u -> {
-            throw new UserAlreadyExistsException(String.format("Username '%s' já está em uso", user.getUsername()));
-        });
+        Map<String, String> errors = new HashMap<>();
+        userRepository.findUserByEmail(user.getEmail())
+                .ifPresent(u -> errors.put("email", "E-mail '%s' já está em uso".formatted(u.getEmail())));
+        userRepository.findUserByUsername(user.getUsername())
+                .ifPresent(u -> errors.put("username", "Username '%s' já está em uso".formatted(u.getUsername())));
+        if (!errors.isEmpty()) {
+            throw new UserAlreadyExistsException(errors);
+        }
     }
 
 }

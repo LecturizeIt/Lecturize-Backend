@@ -26,7 +26,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(jsr250Enabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -60,6 +60,7 @@ public class SecurityConfig {
             resourceServer.accessDeniedHandler(customAccessDeniedHandler);
             resourceServer.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
         }).authorizeHttpRequests(authz -> {
+            authz.requestMatchers(HttpMethod.PUT, "/api/lectures/*/visit", "/api/lectures/*/share").permitAll();
             authz.requestMatchers("/resources/**", "/static/**", "/templates/**", "/swagger-ui/**").permitAll();
             authz.requestMatchers(HttpMethod.GET, "/api/auth/user").authenticated();
             authz.requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll();
