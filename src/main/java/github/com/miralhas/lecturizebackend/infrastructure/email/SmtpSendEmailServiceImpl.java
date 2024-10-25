@@ -36,7 +36,7 @@ public class SmtpSendEmailServiceImpl implements SendEmailService  {
         }
     }
 
-    public String processTemplate(Message message) {
+    private String processTemplate(Message message) {
         try {
             Template template = freemarkerConfig.getTemplate(message.getBody());
             return FreeMarkerTemplateUtils.processTemplateIntoString(template,  message.getModels());
