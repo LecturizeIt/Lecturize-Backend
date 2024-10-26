@@ -60,8 +60,8 @@ public class Lecture {
 
     private Integer maximumCapacity;
 
-    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(nullable = false)
+    @ManyToOne(cascade = {CascadeType.MERGE})
     private User organizer;
 
     @ToString.Exclude
