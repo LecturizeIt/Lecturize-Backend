@@ -1,9 +1,11 @@
 package github.com.miralhas.lecturizebackend.domain.service;
 
+import github.com.miralhas.lecturizebackend.domain.exception.BusinessException;
 import github.com.miralhas.lecturizebackend.domain.exception.CommentNotFoundException;
 import github.com.miralhas.lecturizebackend.domain.model.auth.User;
 import github.com.miralhas.lecturizebackend.domain.model.lecture.Comment;
 import github.com.miralhas.lecturizebackend.domain.model.lecture.Lecture;
+import github.com.miralhas.lecturizebackend.domain.model.lecture.enums.Status;
 import github.com.miralhas.lecturizebackend.domain.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -36,6 +38,7 @@ public class CommentService {
     @Transactional
     public Comment create(Long lectureId, Comment comment, JwtAuthenticationToken authToken) {
         var lecture = lectureService.getLectureOrException(lectureId);
+        validateLectureStatus(lecture);
         var commenter = authService.findUserByEmailOrException(authToken.getName());
         comment.setLecture(lecture);
         comment.setUser(commenter);
@@ -54,5 +57,11 @@ public class CommentService {
         if (user.isAdmin() || Objects.equals(user, comment.getUser())) return;
         throw new AccessDeniedException("Acesso negado. " +
                 "Apenas o organizador ou usuários autorizados podem fazer alterações a este comentário.");
+    }
+
+    private void validateLectureStatus(Lecture lecture) {
+        if (!Objects.equals(lecture.getStatus(), Status.COMPLETED)) {
+            throw new BusinessException("Não é possível adicionar comentários a uma palestra que não foi concluída.");
+        }
     }
 }
