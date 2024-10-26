@@ -1,14 +1,18 @@
 package github.com.miralhas.lecturizebackend.domain.service;
 
 import github.com.miralhas.lecturizebackend.domain.exception.CommentNotFoundException;
+import github.com.miralhas.lecturizebackend.domain.model.auth.User;
 import github.com.miralhas.lecturizebackend.domain.model.lecture.Comment;
+import github.com.miralhas.lecturizebackend.domain.model.lecture.Lecture;
 import github.com.miralhas.lecturizebackend.domain.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -36,5 +40,19 @@ public class CommentService {
         comment.setLecture(lecture);
         comment.setUser(commenter);
         return commentRepository.save(comment);
+    }
+
+    @Transactional
+    public void delete(Long id, JwtAuthenticationToken authToken) {
+        var user = authService.findUserByEmailOrException(authToken.getName());
+        var comment = getCommentOrException(id);
+        validateCommenter(user, comment);
+        commentRepository.deleteById(comment.getId());
+    }
+
+    private void validateCommenter(User user, Comment comment) {
+        if (user.isAdmin() || Objects.equals(user, comment.getUser())) return;
+        throw new AccessDeniedException("Acesso negado. " +
+                "Apenas o organizador ou usuários autorizados podem fazer alterações a este comentário.");
     }
 }

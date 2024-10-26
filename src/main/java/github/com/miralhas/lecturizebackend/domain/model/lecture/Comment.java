@@ -24,17 +24,13 @@ public class Comment {
 
     @ToString.Exclude
     @JoinColumn(nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @JoinColumn
     @ToString.Exclude
-    @JoinColumn(nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Lecture lecture;
-
-    public Long getLectureId() {
-        return lecture.getId();
-    }
 
     @Override
     public final boolean equals(Object o) {
