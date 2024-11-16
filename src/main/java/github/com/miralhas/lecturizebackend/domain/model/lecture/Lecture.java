@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.OffsetDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -60,9 +61,13 @@ public class Lecture {
 
     private Integer maximumCapacity;
 
-    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(nullable = false)
+    @ManyToOne(cascade = {CascadeType.MERGE})
     private User organizer;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "lecture", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
     @ToString.Exclude
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
