@@ -36,10 +36,7 @@ services:
       - api-images:/app/images
     networks:
       - lecturizeit-network
-    deploy:
-      resources:
-        limits:
-          memory: 180M
+
 volumes:
   mysql-data:
   api-images:

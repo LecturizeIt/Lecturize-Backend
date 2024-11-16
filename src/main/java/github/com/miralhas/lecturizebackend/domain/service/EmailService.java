@@ -43,7 +43,7 @@ public class EmailService {
     }
 
     private void addInlineImages(MimeMessageHelper helper) throws MessagingException, IOException {
-        Resource imageResource = new ClassPathResource("static/images/LecturizeIt.jpeg");
+        Resource imageResource = new ClassPathResource("static/images/logo.png");
         helper.addInline("logo", imageResource);
     }
 
