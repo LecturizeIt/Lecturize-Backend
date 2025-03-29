@@ -43,7 +43,7 @@ public class LectureImageResource implements SwaggerLectureImageResource {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<InputStreamResource> getLectureImage(
-            @PathVariable Long id, @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
+            @PathVariable Long id, @RequestHeader(name = "accept", defaultValue = "image/*") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
         return lectureImageService.getImage(id, acceptHeader);
     }
 
