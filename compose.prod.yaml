@@ -10,5 +10,5 @@ services:
       - lecturizeit-api
     volumes:
       - ./nginx/prod.conf:/etc/nginx/conf.d/default.conf
-      - /etc/letsencrypt/ssl/fullchain.pem:/etc/nginx/ssl/fullchain.pem
-      - /etc/letsencrypt/ssl/privkey.pem:/etc/nginx/ssl/privkey.pem
+      - /etc/letsencrypt/ssl/origin-certificate.pem:/etc/nginx/ssl/fullchain.pem
+      - /etc/letsencrypt/ssl/private-key.pem:/etc/nginx/ssl/privkey.pem
