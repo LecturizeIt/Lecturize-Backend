@@ -81,6 +81,9 @@ public class Lecture {
     @OneToOne(mappedBy = "lecture", optional = false, cascade = CascadeType.ALL)
     private Metric metrics;
 
+    @OneToOne(mappedBy = "lecture")
+    private LectureImage image;
+
     public void validateType() {
         switch (type) {
             case ONLINE -> onlineValidations();

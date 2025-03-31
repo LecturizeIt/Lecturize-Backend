@@ -26,5 +26,6 @@ public class LectureDTO {
     private Integer maximumCapacity;
     private UserSummaryDTO organizer;
     private LectureMetricsDTO metrics;
+    private LectureImageDTO image;
     
 }
