@@ -8,6 +8,10 @@ public class ImageNotFoundException extends ResourceNotFoundException {
         super(String.format(MESSAGE, id));
     }
 
+    public ImageNotFoundException(String fileName) {
+        super(String.format(MESSAGE, fileName));
+    }
+
     public ImageNotFoundException(Long id, Throwable cause) {
         super(String.format(MESSAGE, id), cause);
     }

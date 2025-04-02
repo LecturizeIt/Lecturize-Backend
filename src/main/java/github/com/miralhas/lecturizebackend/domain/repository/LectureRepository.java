@@ -13,6 +13,9 @@ public interface LectureRepository extends JpaRepository<Lecture, Long>, Lecture
     @Query("from LectureImage li where li.lecture.id = :id")
     Optional<LectureImage> findImageByLectureId(Long id);
 
+    @Query("from LectureImage li where li.fileName = :fileName")
+    Optional<LectureImage> findImageByFileName(String fileName);
+
     @Query("from Lecture l where l.organizer.email = :user")
     List<Lecture> findAllUserLectures(String user);
 

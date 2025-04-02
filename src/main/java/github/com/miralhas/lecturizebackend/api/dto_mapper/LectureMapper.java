@@ -4,11 +4,13 @@ import github.com.miralhas.lecturizebackend.api.dto.LectureDTO;
 import github.com.miralhas.lecturizebackend.api.dto.LectureSummaryDTO;
 import github.com.miralhas.lecturizebackend.domain.model.lecture.CategoryTag;
 import github.com.miralhas.lecturizebackend.domain.model.lecture.Lecture;
+import github.com.miralhas.lecturizebackend.domain.repository.LectureRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
