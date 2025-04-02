@@ -17,8 +17,6 @@ import java.util.Objects;
 public class LectureMapper {
 
     private final ModelMapper modelMapper;
-    private final LectureImageMapper lectureImageMapper;
-    private final LectureRepository lectureRepository;
 
     public LectureDTO toModel(Lecture lecture) {
 		return modelMapper.map(lecture, LectureDTO.class);
@@ -31,12 +29,6 @@ public class LectureMapper {
     public LectureSummaryDTO toSummaryModel(Lecture lecture) {
         LectureSummaryDTO lectureSummaryDTO = modelMapper.map(lecture, LectureSummaryDTO.class);
         lectureSummaryDTO.setTags(getFormattedTags(lecture));
-//        var image = lectureRepository.findImageByLectureId(lecture.getId()).orElse(null);
-//        if (Objects.nonNull(image)) {
-//            lectureSummaryDTO.setImage(lectureImageMapper.toModel(image));
-//            return lectureSummaryDTO;
-//        }
-//        lectureSummaryDTO.setImage(null);
         return lectureSummaryDTO;
     }
 
