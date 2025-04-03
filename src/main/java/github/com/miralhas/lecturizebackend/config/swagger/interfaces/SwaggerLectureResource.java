@@ -19,7 +19,7 @@ public interface SwaggerLectureResource {
 
     @Operation(summary = "Get all lectures", description = "Retrieves a list of all lectures. Optionally filter by user.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "List of lectures retrieved successfully")})
-    List<LectureSummaryDTO> getAllLectures(@Parameter(description = "Filter lectures by user", example = "john.doe@example.com") @RequestParam(required = false) String user);
+    List<LectureSummaryDTO> getAllLectures();
 
     @Operation(summary = "Get lecture by ID", description = "Retrieves the details of a lecture by its ID.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Lecture details retrieved successfully"), @ApiResponse(responseCode = "404", description = "Lecture not found")})

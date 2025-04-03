@@ -12,6 +12,9 @@ import github.com.miralhas.lecturizebackend.domain.repository.MetricRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -37,6 +40,11 @@ public class LectureService {
     private final LectureImageService lectureImageService;
     private final ApplicationEventPublisher events;
     private final MetricRepository metricRepository;
+
+    public Page<Lecture> findAllPaginated(Integer page, Integer linesPerPage, String direction, String orderBy) {
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        return lectureRepository.findAll(pageRequest);
+    }
 
     public Lecture getLectureOrException(Long id) {
         return lectureRepository.findById(id)
