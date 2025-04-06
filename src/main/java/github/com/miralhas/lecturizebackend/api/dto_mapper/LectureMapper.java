@@ -7,6 +7,7 @@ import github.com.miralhas.lecturizebackend.domain.model.lecture.Lecture;
 import github.com.miralhas.lecturizebackend.domain.repository.LectureRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
