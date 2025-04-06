@@ -33,7 +33,7 @@ public class LectureSpecification {
 				Predicate tagPredicate = tagsJoin.get("name").in(filter.getTags());
 				query.groupBy(root.get("id"));
 				query.having(builder.equal(builder.countDistinct(tagsJoin.get("id")), filter.getTags().size()));
-				return tagPredicate;
+				predicates.add(tagPredicate);
 			}
 
 			return builder.and(predicates.toArray(new Predicate[]{}));
