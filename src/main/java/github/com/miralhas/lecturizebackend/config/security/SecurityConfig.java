@@ -30,48 +30,48 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtDecoder jwtDecoder;
-    private final JwtAuthenticationConverter jwtAuthenticationConverter;
-    private final CustomAccessDeniedHandlerImpl customAccessDeniedHandler;
+	private final JwtDecoder jwtDecoder;
+	private final JwtAuthenticationConverter jwtAuthenticationConverter;
+	private final CustomAccessDeniedHandlerImpl customAccessDeniedHandler;
 
-    @Bean
-    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
-        var authProvider = new DaoAuthenticationProvider(passwordEncoder());
-        authProvider.setUserDetailsService(userDetailsService);
-        return new ProviderManager(authProvider);
-    }
+	@Bean
+	public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
+		var authProvider = new DaoAuthenticationProvider(passwordEncoder());
+		authProvider.setUserDetailsService(userDetailsService);
+		return new ProviderManager(authProvider);
+	}
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.csrf(AbstractHttpConfigurer::disable).cors(cors -> {
-            CorsConfigurationSource source = request -> {
-                CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(List.of("*"));
-                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-                config.setAllowedHeaders(List.of("*"));
-                return config;
-            };
-            cors.configurationSource(source);
-        }).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).oauth2ResourceServer(resourceServer -> {
-            resourceServer.jwt(jwt -> {
-                jwt.decoder(jwtDecoder);
-                jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
-            });
-            resourceServer.accessDeniedHandler(customAccessDeniedHandler);
-            resourceServer.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
-        }).authorizeHttpRequests(authz -> {
-            authz.requestMatchers(HttpMethod.PUT, "/api/lectures/*/visit", "/api/lectures/*/share").permitAll();
-            authz.requestMatchers("/resources/**", "/static/**", "/templates/**", "/swagger-ui/**").permitAll();
-            authz.requestMatchers(HttpMethod.GET, "/api/auth/user").authenticated();
-            authz.requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll();
-            authz.requestMatchers(HttpMethod.GET, "/**").permitAll();
-            authz.anyRequest().authenticated();
-        }).build();
-    }
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+		return httpSecurity.csrf(AbstractHttpConfigurer::disable).cors(cors -> {
+			CorsConfigurationSource source = request -> {
+				CorsConfiguration config = new CorsConfiguration();
+				config.setAllowedOrigins(List.of("*"));
+				config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+				config.setAllowedHeaders(List.of("*"));
+				return config;
+			};
+			cors.configurationSource(source);
+		}).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).oauth2ResourceServer(resourceServer -> {
+			resourceServer.jwt(jwt -> {
+				jwt.decoder(jwtDecoder);
+				jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
+			});
+			resourceServer.accessDeniedHandler(customAccessDeniedHandler);
+			resourceServer.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+		}).authorizeHttpRequests(authz -> {
+			authz.requestMatchers(HttpMethod.PUT, "/api/lectures/*/visit", "/api/lectures/*/share").permitAll();
+			authz.requestMatchers("/resources/**", "/static/**", "/templates/**", "/swagger-ui/**").permitAll();
+			authz.requestMatchers(HttpMethod.GET, "/api/auth/user").authenticated();
+			authz.requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll();
+			authz.requestMatchers(HttpMethod.GET, "/**").permitAll();
+			authz.anyRequest().authenticated();
+		}).build();
+	}
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
 }
