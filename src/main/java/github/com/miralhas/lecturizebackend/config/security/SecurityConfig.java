@@ -63,7 +63,7 @@ public class SecurityConfig {
 			authz.requestMatchers(HttpMethod.PUT, "/api/lectures/*/visit", "/api/lectures/*/share").permitAll();
 			authz.requestMatchers("/resources/**", "/static/**", "/templates/**", "/swagger-ui/**").permitAll();
 			authz.requestMatchers(HttpMethod.GET, "/api/auth/user").authenticated();
-			authz.requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll();
+			authz.requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login", "/api/auth/refresh-token").permitAll();
 			authz.requestMatchers(HttpMethod.GET, "/**").permitAll();
 			authz.anyRequest().authenticated();
 		}).build();
