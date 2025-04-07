@@ -76,4 +76,3 @@ insert into lecture(status, type, created_at, starts_at, ends_at, organizer_id, 
 insert into metrics(times_shared, times_visited, lecture_id) VALUES (10, 10, 21);
 
 INSERT INTO lecture_tags(lecture_id, category_tag_id) VALUES (1, 1), (1, 2), (1, 5), (1,6), (1,7), (1,8), (2,1), (2,4);
-
