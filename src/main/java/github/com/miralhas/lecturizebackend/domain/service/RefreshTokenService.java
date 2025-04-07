@@ -16,7 +16,7 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class RefreshTokenService {
 
-	public static final int REFRESH_TOKEN_EXPIRATION_DATE_IN_SECONDS = 2592000;
+	public static final int REFRESH_TOKEN_EXPIRATION_DATE_IN_SECONDS = 604800; // one week
 
 	private final RefreshTokenRepository refreshTokenRepository;
 

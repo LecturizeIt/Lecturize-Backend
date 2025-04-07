@@ -10,10 +10,6 @@ insert into user_roles(role_id, user_id) VALUES (2,2);
 INSERT INTO user(email, username, created_at, password) VALUES ('criaddt@gmail.com', 'criaddt', utc_timestamp, '$2a$10$CNr3GCdNp8wLUGP/XbUqHOjkSA2josmmAHu38jQgP11g/P/Xulgoa');
 insert into user_roles(role_id, user_id) VALUES (2,3);
 
-INSERT INTO `refresh_token` (`created_at`, `expires_at`, `user_id`, `id`) VALUES (utc_timestamp, DATE_ADD(UTC_TIMESTAMP(), INTERVAL 1 MONTH), 1, unhex(replace(uuid(),'-','')));
-INSERT INTO `refresh_token` (`created_at`, `expires_at`, `user_id`, `id`) VALUES (utc_timestamp, DATE_ADD(UTC_TIMESTAMP(), INTERVAL 1 MONTH), 2, unhex(replace(uuid(),'-','')));
-INSERT INTO `refresh_token` (`created_at`, `expires_at`, `user_id`, `id`) VALUES (utc_timestamp, DATE_ADD(UTC_TIMESTAMP(), INTERVAL 1 MONTH), 3, unhex(replace(uuid(),'-','')));
-
 INSERT INTO category_tag(name) VALUES ('Matemática'), ('Ciências'), ('História'), ('Geografia'), ('Língua Portuguesa'), ('Língua Estrangeira'), ('Artes'), ('Educação Física'), ('Educação Infantil'), ('Ensino Fundamental'), ('Ensino Médio'), ('Educação Superior'), ('Educação de Adultos'), ('Educação a Distância'), ('Aprendizagem Ativa'), ('Ensino Híbrido'), ('Educação Inclusiva'), ('Metodologias Ativas'), ('Gamificação'), ('Ensino Baseado em Projetos'), ('Tecnologia Educacional'), ('E-learning'), ('Ferramentas Digitais'), ('Inteligência Artificial na Educação'), ('Realidade Aumentada'), ('Plataformas de Aprendizagem'), ('Habilidades Socioemocionais'), ('Liderança'), ('Empreendedorismo'), ('Criatividade'), ('Comunicação Eficaz'), ('Trabalho em Equipe'), ('Educação Sustentável'), ('Diversidade e Inclusão'), ('Educação Financeira'), ('Saúde Mental na Educação'), ('Educação Global'), ('Workshops'), ('Palestras'), ('Seminários'), ('Conferências'), ('Feiras de Educação');
 
 insert into lecture(status, type, created_at, starts_at, ends_at, organizer_id, address, description, lecturer, title, url) values ('COMPLETED', 'ONLINE', utc_timestamp, '2024-09-01 03:00:00', '2024-09-01 23:00:00', 1, null, 'Palestra Finalizada', 'Wang da Silva', 'Mais recente', 'https://teste.com');
