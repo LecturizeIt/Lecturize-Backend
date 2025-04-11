@@ -3,8 +3,10 @@ package github.com.miralhas.lecturizebackend.domain.model.lecture;
 import github.com.miralhas.lecturizebackend.domain.model.auth.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 @Getter
@@ -31,6 +33,9 @@ public class Comment {
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     private Lecture lecture;
+
+    @CreationTimestamp
+    private OffsetDateTime createdAt;
 
     @Override
     public final boolean equals(Object o) {

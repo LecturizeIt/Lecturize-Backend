@@ -18,10 +18,10 @@ insert into metrics(times_shared, times_visited, lecture_id) VALUES (5, 5, 1);
 insert into lecture(status, type, created_at, starts_at, ends_at, organizer_id, address, description, lecturer, title, url) values ('SCHEDULED', 'ONLINE', '2024-10-15 12:00:00', '2024-10-15 11:00:00', '2024-10-15 11:41:00', 1, null, 'Palestra Agendada', 'Batman da Silva', 'Mais visitado', 'https://teste.com');
 insert into metrics(times_shared, times_visited, lecture_id) VALUES (10, 1000, 2);
 
-insert into lecture(status, type, created_at, starts_at, ends_at, organizer_id, address, description, lecturer, title, url) values ('IN_PROGRESS', 'ONLINE', '2024-10-15 11:50:00', '2024-09-01 03:00:00', '2024-09-01 23:00:00', 1, null, 'Palestra em Andamento', 'Jonkler da Silva', 'Mais compartilhado', 'https://teste.com');
+insert into lecture(status, type, created_at, starts_at, ends_at, organizer_id, address, description, lecturer, title, url) values ('IN_PROGRESS', 'ONLINE', '2024-10-15 11:50:00', '2024-09-01 03:00:00', '2024-09-01 23:00:00', 2, null, 'Palestra em Andamento', 'Jonkler da Silva', 'Mais compartilhado', 'https://teste.com');
 insert into metrics(times_shared, times_visited, lecture_id) VALUES (350, 20, 3);
 
-insert into lecture(status, type, created_at, starts_at, ends_at, organizer_id, address, description, lecturer, title, url) values ('CANCELED', 'ONLINE', '2024-10-15 11:00:00', '2024-09-01 03:00:00', '2024-09-01 23:00:00', 1, null, 'Palestra Cancelada', 'NickDusk da Silva', 'Palestra de inglês', 'https://teste.com');
+insert into lecture(status, type, created_at, starts_at, ends_at, organizer_id, address, description, lecturer, title, url) values ('CANCELED', 'ONLINE', '2024-10-15 11:00:00', '2024-09-01 03:00:00', '2024-09-01 23:00:00', 2, null, 'Palestra Cancelada', 'NickDusk da Silva', 'Palestra de inglês', 'https://teste.com');
 insert into metrics(times_shared, times_visited, lecture_id) VALUES (15, 15, 4);
 
 insert into lecture(status, type, created_at, starts_at, ends_at, organizer_id, address, description, lecturer, title, url) values ('SCHEDULED', 'ONLINE', '2024-10-15 11:00:00', '2024-11-01 03:00:00', '2024-11-06 23:00:00', 1, null, 'Email Online', 'Sunny da Silva', 'Palestra de física', 'https://teste.com');

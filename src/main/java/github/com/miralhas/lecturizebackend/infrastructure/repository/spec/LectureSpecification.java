@@ -4,8 +4,8 @@ import github.com.miralhas.lecturizebackend.api.dto.filter.LectureFilter;
 import github.com.miralhas.lecturizebackend.domain.model.lecture.CategoryTag;
 import github.com.miralhas.lecturizebackend.domain.model.lecture.Lecture;
 import jakarta.persistence.criteria.Join;
-import org.springframework.data.jpa.domain.Specification;
 import jakarta.persistence.criteria.Predicate;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -26,6 +26,10 @@ public class LectureSpecification {
 
 			if (hasText(filter.getLecturer())) {
 				predicates.add(builder.like(root.get("lecturer"), "%" + filter.getLecturer() + "%"));
+			}
+
+			if (hasText(filter.getUser())) {
+				predicates.add(builder.equal(root.get("organizer").get("email"), filter.getUser()));
 			}
 
 			if (Objects.nonNull(filter.getTags()) && !filter.getTags().isEmpty() && Objects.nonNull(query)) {

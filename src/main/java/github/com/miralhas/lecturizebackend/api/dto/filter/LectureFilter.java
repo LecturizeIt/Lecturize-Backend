@@ -21,6 +21,7 @@ public class LectureFilter {
 	private String q;
 	private String lecturer;
 	private List<String> tags;
+	private String user;
 }
 
 
