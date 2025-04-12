@@ -45,7 +45,7 @@ public class AuthService {
         var user = ((SecurityUser) authenticationResult.getPrincipal()).getUser();
         SecurityContextHolder.getContext().setAuthentication(authenticationResult);
         var jwt = tokenService.generateToken(user);
-        var refreshToken = refreshTokenService.createOrUpdateRefreshToken(user);
+        var refreshToken = refreshTokenService.save(user);
         return new AuthenticationDTO(
                 jwt.getTokenValue(),
                 refreshToken.getId().toString(),

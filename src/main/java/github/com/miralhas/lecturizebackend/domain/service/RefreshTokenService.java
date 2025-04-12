@@ -1,5 +1,6 @@
 package github.com.miralhas.lecturizebackend.domain.service;
 
+import github.com.miralhas.lecturizebackend.domain.exception.RefreshTokenExpiredException;
 import github.com.miralhas.lecturizebackend.domain.exception.RefreshTokenNotFoundException;
 import github.com.miralhas.lecturizebackend.domain.model.auth.RefreshToken;
 import github.com.miralhas.lecturizebackend.domain.model.auth.User;
@@ -25,26 +26,16 @@ public class RefreshTokenService {
 				.orElseThrow(() -> new RefreshTokenNotFoundException("Refresh Token of id %s not found".formatted(id)));
 	}
 
-	public RefreshToken getRefreshTokenByUserOrException(User user) {
-		return refreshTokenRepository.findByUser(user)
-				.orElseThrow(() -> new RefreshTokenNotFoundException(
-						"Refresh Token for the user of email %s was not found".formatted(user.getEmail())
-				));
-	}
-
+	@Transactional(noRollbackFor = RefreshTokenExpiredException.class)
 	public RefreshToken validateRefreshToken(String refreshTokenToBeValidated) {
 		var refreshToken = getRefreshTokenOrExcepiton(UUID.fromString(refreshTokenToBeValidated));
-		refreshToken.validate();
-		return refreshToken;
-	}
-
-	@Transactional
-	public RefreshToken createOrUpdateRefreshToken(User user) {
-		var refresh = refreshTokenRepository.findByUser(user);
-		if(refresh.isPresent()) {
-			return update(refresh.get(), user);
+		if (refreshToken.isInvalid()) {
+			refreshTokenRepository.deleteAllUserRefreshTokens(refreshToken.getUser());
+			refreshTokenRepository.flush();
+			throw new RefreshTokenExpiredException("Refresh token of id %s expired at %s"
+					.formatted(refreshToken.getId(), refreshToken.getExpiresAt()));
 		}
-		return save(user);
+		return refreshToken;
 	}
 
 	@Transactional
