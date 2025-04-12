@@ -26,13 +26,11 @@ public class RefreshToken {
 	@Column(nullable = false)
 	private OffsetDateTime expiresAt;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
 
 
-	public void validate() {
-		if (expiresAt.isBefore(OffsetDateTime.now())) {
-			throw new RefreshTokenExpiredException("Refresh token of id %s expired at %s".formatted(id, expiresAt.toString()));
-		}
+	public boolean isInvalid() {
+		return expiresAt.isBefore(OffsetDateTime.now());
 	}
 }
