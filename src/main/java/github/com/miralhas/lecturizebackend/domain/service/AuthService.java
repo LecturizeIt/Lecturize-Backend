@@ -1,16 +1,17 @@
 package github.com.miralhas.lecturizebackend.domain.service;
 
+import github.com.miralhas.lecturizebackend.api.dto.AuthenticationDTO;
 import github.com.miralhas.lecturizebackend.api.dto.input.LoginInput;
 import github.com.miralhas.lecturizebackend.domain.exception.UserAlreadyExistsException;
 import github.com.miralhas.lecturizebackend.domain.model.auth.User;
 import github.com.miralhas.lecturizebackend.domain.repository.UserRepository;
+import github.com.miralhas.lecturizebackend.domain.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
     private final RoleService roleService;
+    private final RefreshTokenService refreshTokenService;
 
     public User findUserByEmailOrException(String email) {
         return userRepository.findUserByEmail(email).orElseThrow(() -> {
@@ -36,11 +38,20 @@ public class AuthService {
         });
     }
 
-    public Jwt authenticate(LoginInput loginInput) {
+    @Transactional
+    public AuthenticationDTO authenticate(LoginInput loginInput) {
         var authenticationToken = new UsernamePasswordAuthenticationToken(loginInput.getEmail(), loginInput.getPassword());
         var authenticationResult = authenticationManager.authenticate(authenticationToken);
+        var user = ((SecurityUser) authenticationResult.getPrincipal()).getUser();
         SecurityContextHolder.getContext().setAuthentication(authenticationResult);
-        return tokenService.generateToken(authenticationResult);
+        var jwt = tokenService.generateToken(user);
+        var refreshToken = refreshTokenService.save(user);
+        return new AuthenticationDTO(
+                jwt.getTokenValue(),
+                refreshToken.getId().toString(),
+                TokenService.TOKEN_EXPIRATION_TIME,
+                RefreshTokenService.REFRESH_TOKEN_EXPIRATION_DATE_IN_SECONDS
+        );
     }
 
     @Transactional
@@ -49,7 +60,8 @@ public class AuthService {
         var userRole = roleService.getUserRole();
         user.setRoles(Set.of(userRole));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        user = userRepository.save(user);
+        return user;
     }
 
     private void checkIfUsernameOrEmailAreAvailiable(User user) {

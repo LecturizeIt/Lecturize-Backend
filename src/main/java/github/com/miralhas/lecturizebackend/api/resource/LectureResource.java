@@ -36,7 +36,7 @@ public class LectureResource implements SwaggerLectureResource {
 	@GetMapping()
 	@ResponseStatus(HttpStatus.OK)
 	public PageDTO<LectureSummaryDTO> getAllLectures(
-			@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+			@PageableDefault(size = 5, sort = {"createdAt", "id"}, direction = Sort.Direction.DESC) Pageable pageable,
 			LectureFilter lectureFilter
 	) {
 		var lecturesPage = lectureRepository.findAll(LectureSpecification.withFilter(lectureFilter), pageable);
