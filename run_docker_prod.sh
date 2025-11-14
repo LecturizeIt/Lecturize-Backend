@@ -11,6 +11,6 @@ echo "Running Maven clean install..."
 echo "Setting environment variables and starting Docker containers..."
 # export MYSQL_DATABASE="lecturizeit"
 # export MYSQL_PASSWORD="admin"
-docker compose -f compose.yaml -f compose.prod.yaml up -d --build --force-recreate
+docker compose -f compose.yaml up -d --build --force-recreate
 
 echo "Script completed."

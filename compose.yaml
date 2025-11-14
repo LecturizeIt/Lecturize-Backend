@@ -1,4 +1,27 @@
 services:
+  redis:
+    image: redis:latest
+    container_name: "fatec-redisdb"
+    ports:
+      - "6379:6379"
+    networks:
+      - lecturizeit-network
+    volumes:
+      - redis-data:/data
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: "fatec-rabbitmq"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    hostname: lecturize-messages
+    networks:
+      - lecturizeit-network
+
   mysqldb:
     image: mysql:8.0.33
     command: --skip-performance-schema --skip-mysqlx
@@ -36,10 +59,13 @@ services:
       - api-images:/app/images
     networks:
       - lecturizeit-network
+    ports:
+      - "8080:8080"
 
 volumes:
   mysql-data:
   api-images:
+  redis-data:
 networks:
   lecturizeit-network:
     name: lecturizeit-network
