@@ -66,5 +66,4 @@ public class LectureImageResource implements SwaggerLectureImageResource {
         lectureService.validateOrganizer(authService.findUserByEmailOrException(authToken.getName()), lecture);
         lectureImageService.delete(id);
     }
-
 }
