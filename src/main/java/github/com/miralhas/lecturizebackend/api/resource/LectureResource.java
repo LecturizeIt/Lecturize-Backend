@@ -30,7 +30,6 @@ public class LectureResource implements SwaggerLectureResource {
 	private final LectureService lectureService;
 	private final LectureMapper lectureMapper;
 	private final LectureUnmapper lectureUnmapper;
-	private final LectureRepository lectureRepository;
 
 	@Override
 	@GetMapping()
@@ -39,10 +38,7 @@ public class LectureResource implements SwaggerLectureResource {
 			@PageableDefault(size = 5, sort = {"createdAt", "id"}, direction = Sort.Direction.DESC) Pageable pageable,
 			LectureFilter lectureFilter
 	) {
-		var lecturesPage = lectureRepository.findAll(LectureSpecification.withFilter(lectureFilter), pageable);
-		var lecturesSummaryDTO = lectureMapper.toSummaryCollectionModel(lecturesPage.getContent());
-		var lecturesSummaryDTOPage = new PageImpl<>(lecturesSummaryDTO, pageable, lecturesPage.getTotalElements());
-		return new PageDTO<>(lecturesSummaryDTOPage);
+		return lectureService.findAllPaginated(pageable, lectureFilter);
 	}
 
 	@Override

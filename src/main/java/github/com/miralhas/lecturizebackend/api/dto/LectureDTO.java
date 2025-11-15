@@ -4,12 +4,17 @@ import github.com.miralhas.lecturizebackend.domain.model.lecture.CategoryTag;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.List;
 
 @Getter
 @Setter
-public class LectureDTO {
+public class LectureDTO implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private String id;
     private String title;

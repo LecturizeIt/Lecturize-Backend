@@ -1,14 +1,20 @@
-FROM eclipse-temurin:21-jdk-alpine
+FROM maven:3.9.8-eclipse-temurin-21 AS build
 
-LABEL maintainer="Lecturize It"
+WORKDIR /app
 
-COPY target/*.jar app.jar
+COPY pom.xml .
+COPY src ./src
 
+RUN mvn clean install -DskipTests
+
+FROM eclipse-temurin:21-jre-alpine
+
+ARG JAR_FILE=target/*.jar
+
+COPY --from=build /app/${JAR_FILE} app.jar
 COPY src/main/resources/static src/main/resources/static
 COPY src/main/resources/templates src/main/resources/templates
 
 RUN mkdir -p /app/images
 
-EXPOSE 8080
-
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java","-jar","/app.jar"]

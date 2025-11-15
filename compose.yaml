@@ -16,7 +16,7 @@ services:
       - "5672:5672"
       - "15672:15672"
     volumes:
-      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/mnesia
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
     hostname: lecturize-messages
     networks:
@@ -49,12 +49,13 @@ services:
       mysqldb:
         condition: service_healthy
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/lecturizeit?createDatabaseIfNotExist=true&serverTimezone=UTC
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=admin
+      - SPRING_DATASOURCE_URL=${DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DATASOURCE_PASSWORD}
       - LOCAL_IMAGE_DIRECTORY=/app/images
       - SPRING_PROFILES_ACTIVE=prod
       - SMTP_PASSWORD=${SMTP}
+      - SPRING_RABBITMQ_HOST=rabbitmq
     volumes:
       - api-images:/app/images
     networks:

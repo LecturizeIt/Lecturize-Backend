@@ -16,23 +16,8 @@ import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
-
-    @Value("${lecturizeit.openapi.dev-url}")
-    private String devUrl;
-
-    @Value("${lecturizeit.openapi.prod-url}")
-    private String prodUrl;
-
     @Bean
     public OpenAPI myOpenAPI() {
-        Server devServer = new Server();
-        devServer.setUrl(devUrl);
-        devServer.setDescription("Server URL in Development environment");
-
-        Server prodServer = new Server();
-        prodServer.setUrl(prodUrl);
-        prodServer.setDescription("Server URL in Production environment");
-
         Contact contact = new Contact();
         contact.setEmail("partysync.fatec@gmail.com");
         contact.setName("Lecturize It");
@@ -46,6 +31,9 @@ public class SwaggerConfig {
 
         SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearer-key");
         
-        return new OpenAPI().info(info).servers(List.of(devServer, prodServer)).components(new Components().addSecuritySchemes("bearer-key", securityScheme)).addSecurityItem(securityRequirement);
+        return new OpenAPI().info(info)
+                .components(
+                        new Components().addSecuritySchemes("bearer-key", securityScheme)
+                ).addSecurityItem(securityRequirement);
     }
 }

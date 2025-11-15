@@ -1,6 +1,10 @@
 package github.com.miralhas.lecturizebackend.domain.service;
 
+import github.com.miralhas.lecturizebackend.api.dto.LectureSummaryDTO;
+import github.com.miralhas.lecturizebackend.api.dto.PageDTO;
+import github.com.miralhas.lecturizebackend.api.dto.filter.LectureFilter;
 import github.com.miralhas.lecturizebackend.api.dto.input.LectureInput;
+import github.com.miralhas.lecturizebackend.api.dto_mapper.LectureMapper;
 import github.com.miralhas.lecturizebackend.api.dto_mapper.LectureUnmapper;
 import github.com.miralhas.lecturizebackend.domain.event.UserParticipatingLectureEvent;
 import github.com.miralhas.lecturizebackend.domain.exception.LectureNotFoundException;
@@ -9,12 +13,14 @@ import github.com.miralhas.lecturizebackend.domain.model.lecture.Lecture;
 import github.com.miralhas.lecturizebackend.domain.model.lecture.Metric;
 import github.com.miralhas.lecturizebackend.domain.repository.LectureRepository;
 import github.com.miralhas.lecturizebackend.domain.repository.MetricRepository;
+import github.com.miralhas.lecturizebackend.infrastructure.repository.spec.LectureSpecification;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -40,10 +46,14 @@ public class LectureService {
     private final LectureImageService lectureImageService;
     private final ApplicationEventPublisher events;
     private final MetricRepository metricRepository;
+    private final LectureMapper lectureMapper;
 
-    public Page<Lecture> findAllPaginated(Integer page, Integer linesPerPage, String direction, String orderBy) {
-        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-        return lectureRepository.findAll(pageRequest);
+    @Cacheable(cacheNames = "lectures.list")
+    public PageDTO<LectureSummaryDTO> findAllPaginated(Pageable pageable, LectureFilter lectureFilter) {
+        var lecturesPage = lectureRepository.findAll(LectureSpecification.withFilter(lectureFilter), pageable);
+        var lecturesSummaryDTO = lectureMapper.toSummaryCollectionModel(lecturesPage.getContent());
+        var lecturesSummaryDTOPage = new PageImpl<>(lecturesSummaryDTO, pageable, lecturesPage.getTotalElements());
+        return new PageDTO<>(lecturesSummaryDTOPage);
     }
 
     public Lecture getLectureOrException(Long id) {
@@ -52,6 +62,7 @@ public class LectureService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "lectures.list", allEntries = true)
     public Lecture create(Lecture lecture, JwtAuthenticationToken authToken) {
         validateLecture(lecture);
         validateTags(lecture);
@@ -69,6 +80,7 @@ public class LectureService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "lectures.list", allEntries = true)
     public Lecture update(@Valid LectureInput lectureInput, Long id, JwtAuthenticationToken authToken) {
         var lecture = getLectureOrException(id);
         var user = authService.findUserByEmailOrException(authToken.getName());
@@ -80,6 +92,7 @@ public class LectureService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "lectures.list", allEntries = true)
     public void delete(Long id, JwtAuthenticationToken authToken) {
         Lecture lecture = getLectureOrException(id);
         User user = authService.findUserByEmailOrException(authToken.getName());

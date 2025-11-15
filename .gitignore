@@ -34,3 +34,5 @@ build/
 
 ### App ###
 src/main/java/github/com/miralhas/lecturizebackend/TestRun.java
+
+.env
